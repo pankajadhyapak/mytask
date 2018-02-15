@@ -11,6 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
+Route::view('/', 'welcome');
+Route::resource('team', 'TeamController');
+Route::resource('project', 'ProjectController');
+Route::resource('module', 'ModuleController');
+Route::resource('task', 'TaskController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
