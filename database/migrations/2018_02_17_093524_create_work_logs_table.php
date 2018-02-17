@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTagsTable extends Migration
+class CreateWorkLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('work_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("name");
-            $table->text('description')->nullable();
-            $table->nullableMorphs('taggable');
+            $table->double("hours");
+            $table->timestamp("date");
+            $table->text("comment")->nullable();
+            $table->unsignedInteger("user_id");
+            $table->nullableMorphs("loggable");
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('work_logs');
     }
 }

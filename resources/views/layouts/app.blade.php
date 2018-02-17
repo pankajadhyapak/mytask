@@ -15,7 +15,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+        <nav class="navbar navbar-expand-md navbar-light navbar-laravel fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -59,14 +59,18 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4" style="padding-top: 4.5rem !important;">
             @yield('content')
         </main>
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        feather.replace()
+    </script>
     @yield('js')
 </body>
 </html>

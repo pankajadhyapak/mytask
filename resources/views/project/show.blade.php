@@ -7,11 +7,14 @@
             {{ $project->name }}
         </a>
     </p>
-    <div class="collapse mb-2" id="collapseExample">
-        <div class="card card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+
+    @if($project->description)
+        <div class="collapse mb-2" id="collapseExample">
+            <div class="card card-body">
+                {{ $project->description }}
+            </div>
         </div>
-    </div>
+    @endif
 
     <div class="row justify-content-center">
         <div class="col-md-3">
@@ -55,6 +58,9 @@
                         <div class="card card-default">
                             <div class="card-header">
                                 {{ $module->name }} Tasks
+                                @if($module->total_estimated)
+                                    - {{ $module->total_estimated }} Hours
+                                @endif
 
                                 <button
                                         class="btn btn-primary btn-sm float-right"
@@ -68,11 +74,12 @@
                             <div class="card-body" style="padding: 0px;">
                                 @foreach($module->tasks as $task)
                                     <div class="card mb-2">
-                                        <div class="card-body">
+                                        <a href="{{route('task.show', $task)}}">
+                                        <div class="card-body {{ $task->is_completed ? 'text-white bg-success' :'text-dark' }}">
                                             <div class="row">
                                                 <div class="col-md-7">
                                                     <p class="card-text">{{ $task->name }}</p>
-                                                    <p class="card-text"><small class="text-muted">Last updated {{ $task->updated_at->diffForHumans() }}</small></p>
+                                                    <p class="card-text"><small>Last updated {{ $task->updated_at->diffForHumans() }}</small></p>
                                                 </div>
                                                 <div class="col-md-5">
                                                     <p class="card-text">
@@ -82,13 +89,15 @@
                                                          {{ $task->assigned ? 'Assigned to '. $task->assigned->email : 'Un Assigned'  }}
                                                     </p>
                                                     <p class="card-text">
-                                                        {{ $task->estimated_time ? 'Estimated Time '. $task->estimated_time : ''  }}
+                                                        {{ $task->estimated_time ? 'Estimated Time '. $task->estimated_time .' Hrs': ''  }}
                                                     </p>
                                                 </div>
                                             </div>
 
 
                                         </div>
+                                        </a>
+
                                     </div>
                                 @endforeach
                             </div>
@@ -139,10 +148,13 @@
 
                     <div class="form-group">
                         <label for="status">Status</label>
-                        <select id="status" name="status" class="form-control">
-                            <option value="1">To Do</option>
-                            <option value="2">Done</option>
-                            <option value="3">Closed</option>
+                        <select id="status" name="status_id" class="form-control">
+
+                            @foreach($project->statuses as $status)
+                                <option value="{{ $status->id }}" {{ $status->default ? 'selected' :''}}>
+                                    {{ $status->name }} {{ $status->defines_complete ? '(completed)' :'' }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
 

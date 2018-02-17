@@ -3,11 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\Status;
 use App\Team;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -56,6 +67,11 @@ class ProjectController extends Controller
             'created_by' => auth()->id()
         ]);
 
+        foreach (Status::$defaultStatus as $status) {
+            $project->statuses()->create($status);
+        }
+
+
         return redirect()->back()->with("status", "Project Created Successfully");
 
     }
@@ -68,7 +84,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load('modules.tasks', 'team.members');
+        $project->load('modules.tasks', 'team.members', 'statuses');
         return view('project.show', compact('project'));
     }
 

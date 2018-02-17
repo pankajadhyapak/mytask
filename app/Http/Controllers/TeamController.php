@@ -9,6 +9,15 @@ use Illuminate\Http\Request;
 class TeamController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -51,8 +60,9 @@ class TeamController extends Controller
             'description' => $request->get('description'),
             'created_by' => auth()->id()
         ]);
-
-        $team->members()->attach($request->get('members'));
+        $members = $request->get('members');
+        $members[] = auth()->id();
+        $team->members()->attach($members);
 
         return redirect()->back()->with('status', 'Team Created Successfully');
 

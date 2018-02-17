@@ -18,6 +18,12 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    protected $appends = ['display_name'];
+
+    public function getDisplayNameAttribute()
+    {
+        return $this->attributes['name'];
+    }
     /**
      * The attributes that should be hidden for arrays.
      *

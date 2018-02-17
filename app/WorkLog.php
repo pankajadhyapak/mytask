@@ -4,13 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class WorkLog extends Model
 {
     protected $guarded = [];
 
     protected $with = ['owner'];
 
-    public function commentable()
+    protected $dates = ['date'];
+
+    public function loggable()
     {
         return $this->morphTo();
     }

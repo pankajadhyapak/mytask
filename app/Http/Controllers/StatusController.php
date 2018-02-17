@@ -2,21 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Module;
+use App\Status;
 use Illuminate\Http\Request;
 
-class ModuleController extends Controller
+class StatusController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -40,32 +30,21 @@ class ModuleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'project_id' => 'required'
-        ]);
-
-        Module::create([
-            "name" => $request->get("name"),
-            "project_id" => $request->get("project_id"),
-            "created_by" => auth()->id()
-        ]);
-
-        return redirect()->back()->with('status', 'Module Added successfully');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Module $module
+     * @param  \App\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show(Status $status)
     {
         //
     }
@@ -73,10 +52,10 @@ class ModuleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Module $module
+     * @param  \App\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function edit(Module $module)
+    public function edit(Status $status)
     {
         //
     }
@@ -84,11 +63,11 @@ class ModuleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Module $module
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Module $module)
+    public function update(Request $request, Status $status)
     {
         //
     }
@@ -96,10 +75,10 @@ class ModuleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Module $module
+     * @param  \App\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Module $module)
+    public function destroy(Status $status)
     {
         //
     }

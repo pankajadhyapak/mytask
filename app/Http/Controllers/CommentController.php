@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -32,10 +42,26 @@ class CommentController extends Controller
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function store(Request $request)
     {
-        //
+        $allowedType = ["Task"];
+        $type = $request->get('type');
+        if (in_array($type, $allowedType)) {
+
+            $type = '\App\\' . $type;
+            $model = $type::find($request->get('type_id'));
+
+            $model->comments()->create([
+                "body" => $request->get('body'),
+                "user_id" => auth()->id()
+            ]);
+
+            return redirect()->back()->with('status', 'Comment Added Successfully');
+        }
+
+        throw new \Exception("{$type} Type is not commentable");
     }
 
     /**

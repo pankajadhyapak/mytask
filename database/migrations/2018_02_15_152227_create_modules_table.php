@@ -15,7 +15,7 @@ class CreateModulesTable extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("name")->default("All Tasks");
+            $table->string("name")->default("Default");
             $table->unsignedInteger("project_id");
             $table->unsignedInteger("created_by");
             $table->timestamps();

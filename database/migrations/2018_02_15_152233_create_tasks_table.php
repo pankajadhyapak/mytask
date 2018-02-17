@@ -22,8 +22,8 @@ class CreateTasksTable extends Migration
             $table->unsignedInteger("status_id")->nullable();
             $table->unsignedInteger("priority_id")->nullable();
             $table->unsignedInteger("created_by");
-            $table->string("estimated_time");
-            $table->date("due_date");
+            $table->string("estimated_time")->nullable();
+            $table->date("due_date")->nullable();
             $table->boolean("active")->default(true);
             $table->timestamps();
         });

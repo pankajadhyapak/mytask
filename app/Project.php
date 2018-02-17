@@ -17,4 +17,9 @@ class Project extends Model
     {
         return $this->hasMany(Module::class);
     }
+
+    public function statuses()
+    {
+        return $this->morphMany(Status::class, 'statusable')->latest();
+    }
 }
