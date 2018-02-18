@@ -10193,3 +10193,34 @@ body {
   margin-top: 6px;
 }
 
+.modal-lg-custom {
+  max-width: 100%;
+}
+
+.modal.docked .modal-dialog {
+  position: fixed;
+  top: 0;
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+}
+
+.modal.docked.docked-left .modal-dialog {
+  left: 0;
+}
+
+.modal.docked.docked-right .modal-dialog {
+  right: 0;
+}
+
+.modal.docked .modal-content {
+  border-radius: 0;
+  height: 100vh;
+}
+
+.modal.docked .modal-footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+

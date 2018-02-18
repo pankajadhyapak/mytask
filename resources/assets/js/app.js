@@ -20,6 +20,8 @@ import moment from 'moment';
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('nav-component', require('./components/nav.vue'));
 Vue.component('dashboard-menu', require('./components/dashboard-menu.vue'));
+Vue.component('modal-task-new', require('./components/Modals/Task/New'));
+Vue.component('modal-task-view', require('./components/Modals/Task/view'));
 
 Vue.use(VueRouter);
 Vue.prototype.$http = axios.create();
@@ -37,11 +39,16 @@ Vue.mixin({
         _dis(value, placeHolder = "-"){
             return value ? value : placeHolder;
         },
-        formatDate(time){
+        formatDate(time, format = 'D/M/Y'){
             if(time){
-                return moment(time).format('D/M/Y');
+                return moment(time).format(format);
             }
         },
+        formNow(time){
+            if(time){
+                return moment(time).fromNow();
+            }
+        }
     }
 });
 new Vue({

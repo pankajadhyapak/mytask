@@ -18,13 +18,8 @@
                 </div>
             </div>
             <div class="col-md-8">
-                <div class="card card-default">
-                    <div class="card-header">Tasks</div>
+                <router-view></router-view>
 
-                    <div class="card-body">
-                        <router-view></router-view>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
