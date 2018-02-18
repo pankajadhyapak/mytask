@@ -6,8 +6,10 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
+import VueRouter from 'vue-router';
+import router from './routes';
+import moment from 'moment';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -16,7 +18,33 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('nav-component', require('./components/nav.vue'));
+Vue.component('dashboard-menu', require('./components/dashboard-menu.vue'));
 
-const app = new Vue({
-    el: '#app'
+Vue.use(VueRouter);
+Vue.prototype.$http = axios.create();
+const eventHub = new Vue();
+
+Vue.mixin({
+    data(){
+        return {
+            eventHub: eventHub,
+            baseUrl: window.app.baseUrl,
+            authUser : window.app.loggedInUser
+        }
+    },
+    methods:{
+        _dis(value, placeHolder = "-"){
+            return value ? value : placeHolder;
+        },
+        formatDate(time){
+            if(time){
+                return moment(time).format('D/M/Y');
+            }
+        },
+    }
+});
+new Vue({
+    el: '#app',
+    router: router
 });

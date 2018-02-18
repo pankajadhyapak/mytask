@@ -35,6 +35,11 @@ class User extends Authenticatable
 
     public function teams()
     {
-        return $this->belongsToMany(Team::class);
+        return $this->belongsToMany(Team::class, "team_members");
+    }
+
+    public function projects()
+    {
+        return Project::whereIn("team_id", $this->teams->pluck("id"))->get();
     }
 }

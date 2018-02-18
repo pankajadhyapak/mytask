@@ -18,4 +18,9 @@ class Team extends Model
         return $this->hasMany(Project::class);
     }
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, "created_by");
+    }
+
 }

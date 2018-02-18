@@ -1,19 +1,11 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 use App\Status;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+require 'api-front.php';
 
 
 Route::get("test", function(){
@@ -30,4 +22,7 @@ Route::resource('worklog', 'WorkLogController');
 
 Auth::routes();
 
+Route::get('/dashboard/{vue_capture?}', 'HomeController@dashboard')
+    ->name('dashboard')
+    ->where('vue_capture', '[\/\w\.-]*');
 Route::get('/home', 'HomeController@index')->name('home');
