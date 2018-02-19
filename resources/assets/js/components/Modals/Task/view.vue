@@ -31,7 +31,7 @@
                                                 <input type="hidden" name="type" value="Task">
                                                 <input type="hidden" name="type_id" value="1">
                                                 <div class="form-group">
-                                                    <textarea name="body" placeholder="Write Your comment here..." class="form-control"></textarea>
+                                                    <textarea name="body" v-model="newComment.body" placeholder="Write Your comment here..." class="form-control"></textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-primary">Add Comment</button>
@@ -144,12 +144,23 @@
         data(){
             return {
                 task: {},
-                dataLoaded: false
+                dataLoaded: false,
+                newComment: {
+                    body: "",
+                    type: "Task",
+                    type_id: this.task_id ? this.task_id : ''
+                }
             }
         },
         methods:{
             addComment(){
-
+                let vm = this;
+                axios.post("/api/task/"+this.task_id+"/comment", vm.newComment)
+                    .then(function (response) {
+                        vm.task.comments.push(response.data);
+                    }, function (error) {
+                        console.log(error);
+                    })
             }
         },
         computed:{
