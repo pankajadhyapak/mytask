@@ -1,5 +1,8 @@
 <template>
     <div class="container">
+
+        <user-select v-model="selectedUsers"></user-select>
+
         <div class="row">
             <div class="col-md-4">
                 <div class="card card-default">
@@ -30,8 +33,8 @@
         </div>
     </div>
 </template>
-
 <script>
+
     export default {
         mounted() {
             console.log('Component mounted.');
@@ -40,15 +43,20 @@
         },
         data(){
             return {
-                projects: [],
                 teams: [],
-                tasks:[]
+                tasks:[],
+                selectedUsers:[],
+                options: [],
+                isLoading: false
             }
         },
         methods:{
+            test(){
+
+            },
             getInitData(){
                 //axios.get("")
-            }
+            },
         }
     }
 </script>

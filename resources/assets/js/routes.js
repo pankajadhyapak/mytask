@@ -5,11 +5,16 @@ import PageNotFound from './pages/NotFound.vue';
 import SingleTeam from './pages/Team/show';
 import SingleProject from './pages/Project/show'
 import ModuleTasks from './pages/Module/AllTask'
+import Setting from './pages/Settings'
 
 let routes = [
     {
         path: '/dashboard',
         component: Home
+    },
+    {
+        path: '/dashboard/settings',
+        component: Setting
     },
     {
         path: '/dashboard/about',
@@ -23,10 +28,10 @@ let routes = [
         path: '/dashboard/project/:id',
         component: SingleProject,
         children: [
-            {
-                path: '/',
-                component: ModuleTasks
-            },
+            // {
+            //     path: '/',
+            //     component: ModuleTasks
+            // },
             {
                 path: 'module/:module_id',
                 component: ModuleTasks

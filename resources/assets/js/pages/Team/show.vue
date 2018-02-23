@@ -4,7 +4,7 @@
             <div class="col-md-10">
                 <div class="card card-default">
                     <!--<div class="card-header">About Page</div>-->
-                    <div class="card-body" v-if="dataLoded">
+                    <div class="card-body" v-if="dataLoaded">
                         <center>
                             <div class="team-avatar avatar">
                                 {{ team.name[0] }}
@@ -76,25 +76,35 @@
     }
 </style>
 <script>
+
     export default {
         mounted() {
             let vm = this;
-            axios.get("/api/team/"+this.$route.params.id).then(function (response) {
-                vm.team = response.data;
-                vm.dataLoded = true;
-            }, function (error) {
-                vm.dataLoded = false;
-                //vm.$router.go('/dashboard/404');
-            });
+            vm.getTeam(vm.$route.params.id);
         },
         data(){
             return {
                 team:{},
-                dataLoded: false
+                dataLoaded: false
+            }
+        },
+        watch: {
+            '$route' (to, from) {
+                this.team = this.getTeam(to.params.id);
             }
         },
         methods:{
-
+            getTeam(id){
+                let vm = this;
+                axios.get("/api/team/"+id).then(function (response) {
+                    vm.team = response.data;
+                    vm.dataLoaded = true;
+                }, function (error) {
+                    vm.dataLoaded = false;
+                    //vm.$router.go('/dashboard/404');
+                });
+            }
         }
+
     }
 </script>

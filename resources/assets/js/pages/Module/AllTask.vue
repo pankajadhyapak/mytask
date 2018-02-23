@@ -8,7 +8,7 @@
             </span>
         </div>
 
-        <div class="card-body" style="padding: 8px;">
+        <div class="card-body" style="padding: 8px;" v-if="dataLoaded">
             <div class="">
                 <div class="task mb-2"
                      v-for="task in module.tasks"
@@ -22,10 +22,16 @@
                     <span v-else class="badge badge-secondary float-right">Un Assigned</span>
                     <span class="badge badge-dark float-right mr-2">{{ task.status.name}}</span>
                     <span class="badge badge-light float-right mr-2">
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
-                {{ task.estimated_time }} Hrs
-            </span>
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            {{ task.estimated_time }} Hrs
+                    </span>
+                </div>
 
+                <div class="empty_list text-center mb-5 mt-5" v-if="!module.tasks.length">
+                    <i class="fa fa-list mb-3" aria-hidden="true" style="font-size:100px;color: #7c7c7d;"></i>
+                    <h4>You Dont have any Task!!</h4>
+                    <button class="btn btn-outline-primary mt-2"
+                            @click="showNewTaskModalf(module.id)">Create New Task</button>
 
                 </div>
             </div>
@@ -37,18 +43,20 @@
 
 </template>
 <style scoped>
-    .task{
+    .task {
         padding: 10px;
         border: 1px dashed #b1afaf;
         cursor: pointer;
     }
-    .avatar.float-right{
+
+    .avatar.float-right {
         position: relative;
         right: 0px;
         top: -4px;
     }
+
     .completed-task {
-        border: 2px solid green!important;
+        border: 2px solid green !important;
     }
 </style>
 <script>
@@ -59,11 +67,11 @@
             this.getAllTasksForModule(module_id);
             console.log("Hello from All Task");
 
-            vm.eventHub.$on('newTaskModalClosed', function (e) {
+            vm.eventHub.$on('newTaskModalClosed', function(e) {
                 vm.showNewTaskModal = false;
             });
 
-            vm.eventHub.$on('viewTaskModalClosed', function (e) {
+            vm.eventHub.$on('viewTaskModalClosed', function(e) {
                 vm.showViewTaskModal = false;
             });
 
@@ -71,11 +79,10 @@
         },
         watch: {
             '$route' (to, from) {
-                console.log(to.params.module_id);
                 this.getAllTasksForModule(to.params.module_id);
             }
         },
-        data(){
+        data() {
             return {
                 module: {},
                 dataLoaded: false,
@@ -85,22 +92,22 @@
                 currentTaskId: null
             }
         },
-        methods:{
-            showNewTaskModalf(module_id){
-              this.currentModuleId = module_id;
-              this.showNewTaskModal = true;
+        methods: {
+            showNewTaskModalf(module_id) {
+                this.currentModuleId = module_id;
+                this.showNewTaskModal = true;
             },
-            showViewTaskModalf(task_id){
+            showViewTaskModalf(task_id) {
                 this.currentTaskId = task_id;
                 this.showViewTaskModal = true;
             },
-            getAllTasksForModule(module_id){
+            getAllTasksForModule(module_id) {
                 let vm = this;
-                axios.get("/api/module/"+ module_id + "/tasks").then(function (response) {
+                axios.get("/api/module/" + module_id + "/tasks").then(function(response) {
                     vm.module = response.data;
-                    vm.dataLoded = true;
-                }, function (error) {
-                    vm.dataLoded = false;
+                    vm.dataLoaded = true;
+                }, function(error) {
+                    vm.dataLoaded = false;
                     //vm.$router.go('/dashboard/page-404');
                 });
             }

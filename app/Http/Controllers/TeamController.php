@@ -52,7 +52,7 @@ class TeamController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'description' => 'sometimes',
-            'members' => 'required'
+            'members' => 'required|array'
         ]);
 
         $team = Team::create([

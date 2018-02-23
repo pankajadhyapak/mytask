@@ -21,6 +21,8 @@
     },
     "dependencies": {
         "moment": "^2.20.1",
-        "vue-router": "^3.0.1"
+        "sweetalert": "^2.1.0",
+        "vue-router": "^3.0.1",
+        "vue-select": "^2.4.0"
     }
 }

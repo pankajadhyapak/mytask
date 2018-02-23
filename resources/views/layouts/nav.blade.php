@@ -45,9 +45,11 @@
                             <ul role="menu" class="dropdown-menu">
                                 <li class="dropdown-header">Settings</li>
                                 <li>
-                                    <a class="dropdown-item" href="/settings">
-                                        <i class="fa fa-fw fa-btn fa-cog"></i>Your Settings
-                                    </a>
+                                    <router-link
+                                        to="/dashboard/settings"
+                                        class="dropdown-item">
+                                        <i class="fa fa-fw fa-btn fa-cog"></i>
+                                    Settings</router-link>
                                 </li>
                                 {{--<li class="dropdown-divider"></li>--}}
                                 {{--<li class="dropdown-header">Support</li>--}}
