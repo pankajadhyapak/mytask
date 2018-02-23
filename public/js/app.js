@@ -68553,17 +68553,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(237)
+}
 var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(201)
 /* template */
-var __vue_template__ = __webpack_require__(202)
+var __vue_template__ = __webpack_require__(239)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-7320d262"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -68642,6 +68646,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -68670,137 +68692,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 202 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "col-md-3" },
-    [
-      _c("nav", [
-        _c("div", { staticClass: "card card-default" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _c("i", {
-              staticClass: "fa fa-users",
-              attrs: { "aria-hidden": "true" }
-            }),
-            _vm._v("\n            Teams "),
-            _c("span", [_vm._v("(" + _vm._s(_vm.teams.length) + ")")]),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-outline-dark btn-sm float-right",
-                on: {
-                  click: function($event) {
-                    _vm.showNewTeamModal = true
-                  }
-                }
-              },
-              [_vm._v("New Team")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "ul",
-              { staticClass: "list-unstyled" },
-              _vm._l(_vm.teams, function(team, index) {
-                return _c(
-                  "li",
-                  { key: index },
-                  [
-                    _c(
-                      "router-link",
-                      { attrs: { to: { path: "/dashboard/team/" + team.id } } },
-                      [
-                        _c("span", [_vm._v(_vm._s(team.name))]),
-                        _vm._v(" "),
-                        _c("small", [
-                          _c("span", { staticClass: "float-right" }, [
-                            _vm._v("New Project")
-                          ])
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "ul",
-                      { staticClass: "ml-2 list-unstyled" },
-                      _vm._l(team.projects, function(project, index) {
-                        return _c(
-                          "li",
-                          { key: index },
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                attrs: {
-                                  to: {
-                                    path: "/dashboard/project/" + project.id
-                                  }
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                " +
-                                    _vm._s(project.name) +
-                                    "\n                            "
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      })
-                    )
-                  ],
-                  1
-                )
-              })
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _vm.showNewTeamModal
-        ? _c("modal-new-team", {
-            on: {
-              closed: function($event) {
-                _vm.newTeamModalClosed()
-              }
-            }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.showNewModal
-        ? _c("new-one", {
-            on: {
-              closed: function($event) {
-                _vm.showNewModal = false
-              }
-            }
-          })
-        : _vm._e()
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7320d262", module.exports)
-  }
-}
-
-/***/ }),
+/* 202 */,
 /* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -70644,6 +70536,188 @@ exports.push([module.i, "\n.task {\n    padding: 10px;\n    border: 1px dashed #
 
 // exports
 
+
+/***/ }),
+/* 235 */,
+/* 236 */,
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(238);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("4bd89350", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7320d262\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./dashboard-menu.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7320d262\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./dashboard-menu.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.dashboard-menu[data-v-7320d262]{\n    background: #222b37;\n    color:#fff;\n}\n.dashboard-menu a[data-v-7320d262]{\n    color:#fff\n}\n.dashboard-menu li[data-v-7320d262]{\n    padding:8px\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "col-md-3" },
+    [
+      _c("nav", [
+        _c("div", { staticClass: "card card-default " }, [
+          _c("div", { staticClass: "card-header dashboard-menu" }, [
+            _c("i", {
+              staticClass: "fa fa-users",
+              attrs: { "aria-hidden": "true" }
+            }),
+            _vm._v("\n            Teams "),
+            _c("span", [_vm._v("(" + _vm._s(_vm.teams.length) + ")")]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-light btn-sm float-right",
+                on: {
+                  click: function($event) {
+                    _vm.showNewTeamModal = true
+                  }
+                }
+              },
+              [_vm._v("New Team")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body dashboard-menu" }, [
+            _c(
+              "ul",
+              { staticClass: "list-unstyled" },
+              _vm._l(_vm.teams, function(team, index) {
+                return _c(
+                  "li",
+                  { key: index },
+                  [
+                    _c(
+                      "router-link",
+                      { attrs: { to: { path: "/dashboard/team/" + team.id } } },
+                      [_c("span", [_vm._v(_vm._s(team.name))])]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      { staticClass: "ml-2 list-unstyled" },
+                      [
+                        _c("small", [_vm._v("Projects ")]),
+                        _vm._v(" "),
+                        _vm._m(0, true),
+                        _vm._v(" "),
+                        _vm._l(team.projects, function(project, index) {
+                          return _c(
+                            "li",
+                            { key: index },
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  attrs: {
+                                    to: {
+                                      path: "/dashboard/project/" + project.id
+                                    }
+                                  }
+                                },
+                                [_c("small", [_vm._v(_vm._s(project.name))])]
+                              )
+                            ],
+                            1
+                          )
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("hr", {
+                      staticStyle: { "border-top": "1px solid rgb(99, 99, 99)" }
+                    })
+                  ],
+                  1
+                )
+              })
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.showNewTeamModal
+        ? _c("modal-new-team", {
+            on: {
+              closed: function($event) {
+                _vm.newTeamModalClosed()
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showNewModal
+        ? _c("new-one", {
+            on: {
+              closed: function($event) {
+                _vm.showNewModal = false
+              }
+            }
+          })
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "float-right" }, [
+      _c("i", {
+        staticClass: "fa fa-plus-circle",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7320d262", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

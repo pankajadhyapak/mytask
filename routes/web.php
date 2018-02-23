@@ -9,7 +9,12 @@ require 'api-front.php';
 
 
 Route::get("test", function(){
-   dd(Status::$defaultStatus);
+   return response()->json([
+       "success" => true,
+       "data" => [
+           "name" => "pankaj"
+       ]
+   ]);
 });
 Route::view('/', 'welcome')->middleware('guest');
 

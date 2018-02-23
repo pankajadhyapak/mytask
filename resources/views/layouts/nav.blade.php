@@ -1,6 +1,6 @@
 <nav-component inline-template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light appbar fixed-top">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="{{ url('/') }}">
                 {{ config('app.name', 'Laravel') }}
             </a>
