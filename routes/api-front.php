@@ -2,6 +2,7 @@
 
 use App\Module;
 use App\Project;
+use App\Status;
 use App\Task;
 use App\Team;
 use App\User;
@@ -15,11 +16,13 @@ Route::post("/api/team", function(Request $request){
         'description' => $request->get('description'),
         'created_by' => auth()->id()
     ]);
+
     $members = collect($request->get('members'))->pluck("id");
-    $members[] = auth()->id();
+    //$members[] = auth()->id();
+
     $team->members()->attach(array_unique($members->toArray()));
 
-    return $team;
+    return $team->load("projects","members");
 });
 Route::get("/api/users", function(){
     return User::all();
@@ -39,6 +42,30 @@ Route::get("/api/team/{team}", function(Team $team){
     return $team->load('members', 'projects', 'owner');
 });
 
+Route::post("/api/task", function(Request $request){
+
+    validator($request->toArray(), [
+        'name' => 'required',
+        'module_id' => 'required',
+        'project_id' => 'required'
+    ]);
+
+    $status = Status::where("statusable_type", "App\Project")
+                ->where("statusable_id", $request->get('project_id'))
+                ->where("default", 1)->firstOrFail();
+
+    $task = Task::create([
+        'name' => $request->get('name'),
+        'module_id' => $request->get('module_id'),
+        'status_id' => $status->id,
+        'created_by' => auth()->id()
+    ]);
+    return $task->load('owner');
+});
+Route::delete("/api/task/{task}", function(Task $task){
+    $task->delete();
+    return ["success" => true];
+});
 Route::get("/api/project/{project}", function(Project $project){
     return $project->load('modules.tasks', 'team.members');
 });

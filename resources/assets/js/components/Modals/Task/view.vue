@@ -5,7 +5,12 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
                         {{ _dis(task.name) }}
+
+
                     </h5>
+                    <button class="btn btn-outline-danger btn-sm ml-3" type="button" @click="deleteTask(task)">
+                        Delete Task
+                    </button>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -97,7 +102,7 @@
                                 <div class="col-md-6">
                                     <h5>Created Date</h5>
                             <p>
-                                {{ _dis(task.created_at) }}
+                                {{ _dis(formatDate(task.created_at)) }}
                             </p>
                                 </div>
                             </div>
@@ -188,6 +193,37 @@
                     }, function (error) {
                         console.log(error);
                     })
+            },
+            deleteTask(task){
+                let vm = this;
+
+                swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this imaginary file!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            axios.delete("/api/task/"+task.id).then((response)=> {
+                                swal({
+                                    title :"Deleted",
+                                    text:"Your Task is deleted",
+                                    icon:"success",
+                                    timer:1500
+                                })
+                            }, (error) =>{
+                                swal({
+                                    title :"Opps",
+                                    text:"There was Some Error in deleting you Task!",
+                                    icon:"warning",
+                                    timer:1500
+                                })
+
+                            });
+                        }
+                    });
             }
         },
         computed:{
@@ -198,6 +234,6 @@
                 });
                 return hrs;
             }
-        }
+        },
     }
 </script>

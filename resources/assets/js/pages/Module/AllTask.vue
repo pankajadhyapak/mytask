@@ -12,7 +12,7 @@
             <div class="">
                 <div class="task mb-2"
                      v-for="task in module.tasks"
-                     :class=" task.is_completed ? 'completed-task' : ''"
+                     :class=" task.is_completed ? 'completed-tasknew' : ''"
                      @click="showViewTaskModalf(task.id)">
                     {{ task.name }}
                     <div class="avatar float-right" v-if="task.assigned">
@@ -57,6 +57,7 @@
 
     .completed-task {
         border: 2px solid green !important;
+        color: #969696 !important;
     }
 </style>
 <script>

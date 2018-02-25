@@ -1,6 +1,11 @@
 <template>
-    <my-modal @closed="$emit('closed')">
+    <my-modal
+            @closed="$emit('closed')"
+            name="newTeam"
+            :close="closeModal">
+
         <template slot="title">Create New Team</template>
+
         <form @submit.prevent="addNewTeam()" style="padding: 10px">
                         <div class="form-group">
                             <label for="name">Team Name</label>
@@ -25,16 +30,8 @@
 
                         <div class="form-group">
                             <label>Members</label>
-                            <vselect multiple :options="options" label="email" v-model="newTeam.members">
-                                <template slot="option" slot-scope="option">
-                                    <div class="pb-2">
-                                        <div class="avatar">
-                                            {{option.display_name[0]}}
-                                        </div>
-                                        {{ option.email }}
-                                    </div>
-                                </template>
-                            </vselect>
+                            <user-select v-model="newTeam.members">
+                            </user-select>
                         </div>
                         <button type="submit" class="btn btn-primary">Create Team</button>
                     </form>
@@ -55,6 +52,8 @@
         data(){
             return {
                 options: [],
+                closeModal: false,
+                createdTeam: null,
                 newTeam: {
                     name:'',
                     description:'',
@@ -65,9 +64,14 @@
         methods:{
             addNewTeam(){
                 let vm = this;
-                axios.post("/api/team", vm.newTeam).then(function(response){
-                    console.log(response.data);
+                axios.post("/api/team", vm.newTeam)
+                    .then((response) => {
+                        vm.createdTeam = response.data;
+                        vm.eventHub.$emit("newTeamCreated", response.data);
+                    }, (error) => {
+
                 });
+                vm.closeModal = true;
             }
         }
     }

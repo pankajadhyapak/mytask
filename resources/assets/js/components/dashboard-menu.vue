@@ -40,7 +40,7 @@
             </div>
         </div>
     </nav>
-        <modal-new-team v-if="showNewTeamModal" @closed="newTeamModalClosed()"></modal-new-team>
+        <modal-new-team v-if="showNewTeamModal" @closed="showNewTeamModal = false"></modal-new-team>
         <new-one v-if="showNewModal" @closed="showNewModal = false"></new-one>
     </div>
 
@@ -69,11 +69,15 @@
         mounted() {
             let vm =this;
             vm.getDashboardData();
+
+            vm.eventHub.$on("newTeamCreated", function (data) {
+                if(data){
+                    vm.teams.push(data);
+                    swal({ title :"Team Created", icon:"success" ,timer:1000});
+                }
+            });
         },
         methods:{
-            newTeamModalClosed(){
-                this.showNewTeamModal = false;
-            },
             getDashboardData(){
                 let vm = this;
                 axios.get("/api/dashboard/init").then(function (response) {

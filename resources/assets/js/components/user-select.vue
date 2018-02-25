@@ -3,12 +3,12 @@
              :filterable="false"
              :options="options"
              @search="onSearch"
-             v-model="selectedUsers"
-             @onChange="$emit('input', selectedUsers)">
+             v-model="selectedUsers">
 
         <template slot="no-options">
             type to search users..
         </template>
+
         <template  slot="option" slot-scope="option">
             <div class="pb-2">
                 <div class="avatar">
@@ -23,7 +23,6 @@
 
 <script>
     import _ from 'lodash';
-
     export default {
         data(){
             return {
@@ -31,7 +30,17 @@
                 selectedUsers:[]
             }
         },
+        watch:{
+            'selectedUsers' (){
+                console.log("Changed");
+                this.$emit('input', this.selectedUsers);
+            }
+        },
         methods:{
+            changed(){
+              console.log("Changed");
+              this.$emit('input', this.selectedUsers);
+            },
             onSearch(search, loading) {
                 loading(true);
                 this.search(loading, search, this);
