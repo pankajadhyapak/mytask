@@ -9,6 +9,11 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::patch("/api/task/{task}/complete", function (Task $task){
+    $status = Status::where("statusable_type", "App\Project")
+        ->where("statusable_id", request('project_id'))
+        ->where("defines_complete", 1)->firstOrFail();
+});
 Route::post("/api/team", function(Request $request){
 
     $team = Team::create([

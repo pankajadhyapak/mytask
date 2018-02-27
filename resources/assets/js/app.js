@@ -33,6 +33,7 @@ Vue.component('modal-new-team', require('./components/Modals/Team/New'));
 Vue.component('my-modal', require('./components/Modals/modal'));
 Vue.component('new-one', require('./components/Modals/Team/NewOne'));
 Vue.component('user-select', require('./components/user-select'));
+Vue.component('project-task', require('./pages/Project/task'));
 
 Vue.use(VueRouter);
 

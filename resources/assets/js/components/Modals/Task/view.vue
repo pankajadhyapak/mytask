@@ -5,8 +5,6 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
                         {{ _dis(task.name) }}
-
-
                     </h5>
                     <button class="btn btn-outline-danger btn-sm ml-3" type="button" @click="deleteTask(task)">
                         Delete Task
@@ -52,7 +50,7 @@
                                             <div class="comment-meta">
                                                 <span class="comment-author text-dark">{{comment.owner.display_name}}</span>
                                                 <small>
-                                                <span class="comment-date text-muted">{{formNow(comment.created_at)}}</span>
+                                                    <span class="comment-date text-muted">{{formNow(comment.created_at)}} <em>said</em></span>
                                                 </small>
                                             </div>
                                             <div class="comment-body text-secondary">

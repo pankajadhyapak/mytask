@@ -50280,6 +50280,7 @@ Vue.component('modal-new-team', __webpack_require__(217));
 Vue.component('my-modal', __webpack_require__(222));
 Vue.component('new-one', __webpack_require__(225));
 Vue.component('user-select', __webpack_require__(230));
+Vue.component('project-task', __webpack_require__(237));
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 
@@ -67523,7 +67524,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n.complete-icon{\n    color:#333;\n    font-size: 18px;\n}\n.complete-icon:hover{\n    color:green;\n}\n.completed-task .complete-icon{\n    color:green;\n}\n.completed-task .complete-icon:hover{\n    color:#333;\n}\n.task {\n    padding: 10px;\n    border: 1px dashed #b1afaf;\n    cursor: pointer;\n}\n.module-heading{\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border-radius: 0;\n    background: #dcdcdc;\n}\n.avatar.float-right {\n    position: relative;\n    right: 0;\n    top: -4px;\n}\n.completed-task {\n    border: 2px solid green !important;\n    color: #969696 !important;\n}\n", ""]);
+exports.push([module.i, "\nspan.edit-icon {\n    display:none;\n}\nspan.task-body:hover span.edit-icon{\n    display: inline-block !important;\n}\n.complete-icon{\n    color:#333;\n    font-size: 18px;\n}\n.complete-icon:hover{\n    color:green;\n}\n.completed-task .complete-icon{\n    color:green;\n}\n.task {\n    padding: 10px;\n    border: 1px dashed #b1afaf;\n    cursor: pointer;\n}\n.module-heading{\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border-radius: 0;\n    background: #dcdcdc;\n}\n.avatar.float-right {\n    position: relative;\n    right: 0;\n    top: -4px;\n}\n.completed-task {\n    border: 2px solid green !important;\n    color: #969696 !important;\n}\n", ""]);
 
 // exports
 
@@ -67534,17 +67535,6 @@ exports.push([module.i, "\n.complete-icon{\n    color:#333;\n    font-size: 18px
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -67719,12 +67709,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }, function (error) {});
             this.quickTask = "";
         },
-        markCompleted: function markCompleted(moduleId, taskId) {
-            var module = _.find(this.project.modules, ['id', moduleId]);
-            var task = _.find(module.tasks, ['id', taskId]);
-            //axios call
-            task.is_completed = !task.is_completed;
-        },
         toolTipText: function toolTipText(task) {
             if (task.is_completed) {
                 return "Mark Incomplete";
@@ -67739,6 +67723,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.showNewTaskModal = true;
         },
         showViewTaskModalf: function showViewTaskModalf(task_id) {
+            alert("Hello");
             this.currentTaskId = task_id;
             this.showViewTaskModal = true;
         },
@@ -67878,126 +67863,19 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _vm._l(module.tasks.slice().reverse(), function(task) {
-                        return _c(
-                          "div",
-                          {
-                            staticClass: "task mb-2",
-                            class: task.is_completed ? "completed-task" : ""
+                        return _c("project-task", {
+                          attrs: {
+                            task: task,
+                            module: module.id,
+                            project: module.project_id
                           },
-                          [
-                            _c("i", {
-                              directives: [
-                                {
-                                  name: "tooltip",
-                                  rawName: "v-tooltip:bottom",
-                                  value:
-                                    "{task.is_completed ? " /
-                                    _vm.markInCompleteMsg /
-                                    " : " /
-                                    _vm.markCompleteMsg /
-                                    "}",
-                                  expression:
-                                    "'{task.is_completed ? '/markInCompleteMsg/' : '/markCompleteMsg/'}'",
-                                  arg: "bottom"
-                                }
-                              ],
-                              staticClass:
-                                "fa fa-check-circle-o mr-2 complete-icon float-left",
-                              attrs: {
-                                "data-original-title": task.is_completed
-                                  ? _vm.markInCompleteMsg
-                                  : _vm.markCompleteMsg,
-                                "data-placement": "bottom"
-                              },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.markCompleted(module.id, task.id)
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "span",
-                              {
-                                staticStyle: { display: "block" },
-                                on: {
-                                  click: function($event) {
-                                    _vm.showViewTaskModalf(task.id)
-                                  }
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(task.name) +
-                                    "\n                        "
-                                ),
-                                task.assigned
-                                  ? _c(
-                                      "div",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "tooltip",
-                                            rawName: "v-tooltip:bottom",
-                                            value: task.assigned.email,
-                                            expression: "task.assigned.email",
-                                            arg: "bottom"
-                                          }
-                                        ],
-                                        staticClass: "avatar float-right"
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                            " +
-                                            _vm._s(task.assigned.name[0]) +
-                                            "\n                        "
-                                        )
-                                      ]
-                                    )
-                                  : _c(
-                                      "span",
-                                      {
-                                        staticClass:
-                                          "badge badge-secondary float-right"
-                                      },
-                                      [_vm._v("Un Assigned")]
-                                    ),
-                                _vm._v(" "),
-                                _c(
-                                  "span",
-                                  {
-                                    staticClass:
-                                      "badge badge-dark float-right mr-2"
-                                  },
-                                  [_vm._v(_vm._s(task.status.name))]
-                                ),
-                                _vm._v(" "),
-                                task.estimated_time
-                                  ? _c(
-                                      "span",
-                                      {
-                                        staticClass:
-                                          "badge badge-light float-right mr-2"
-                                      },
-                                      [
-                                        _c("i", {
-                                          staticClass: "fa fa-clock-o",
-                                          attrs: { "aria-hidden": "true" }
-                                        }),
-                                        _vm._v(
-                                          "\n                                " +
-                                            _vm._s(task.estimated_time) +
-                                            " Hrs\n                        "
-                                        )
-                                      ]
-                                    )
-                                  : _vm._e()
-                              ]
-                            )
-                          ]
-                        )
+                          on: {
+                            click: function($event) {
+                              $event.stopPropagation()
+                              _vm.showViewTaskModalf(task.id)
+                            }
+                          }
+                        })
                       }),
                       _vm._v(" "),
                       !module.tasks.length
@@ -69526,8 +69404,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['task_id'],
@@ -69650,7 +69526,7 @@ var render = function() {
                   _vm._v(
                     "\n                    " +
                       _vm._s(_vm._dis(_vm.task.name)) +
-                      "\n\n\n                "
+                      "\n                "
                   )
                 ]
               ),
@@ -69809,8 +69685,9 @@ var render = function() {
                                           _vm._v(
                                             _vm._s(
                                               _vm.formNow(comment.created_at)
-                                            )
-                                          )
+                                            ) + " "
+                                          ),
+                                          _c("em", [_vm._v("said")])
                                         ]
                                       )
                                     ])
@@ -70932,6 +70809,304 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 234 */,
+/* 235 */,
+/* 236 */,
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(238)
+/* template */
+var __vue_template__ = __webpack_require__(239)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/pages/Project/task.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-167c09f8", Component.options)
+  } else {
+    hotAPI.reload("data-v-167c09f8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 238 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['task', 'module', 'project'],
+    mounted: function mounted() {
+        console.log('Component mounted.');
+    },
+
+    methods: {
+        saveTask: function saveTask() {
+            //make ajax call and save data
+            this.taskEditing = false;
+        },
+        editTask: function editTask(task) {
+            this.taskEditing = true;
+        },
+        markComplete: function markComplete(projectId, moduleId, taskId) {
+            axios.patch("/api/task/" + taskId + "/complete", { project_id: projectId, module_id: moduleId }).then(function (response) {
+                consolge.log(response.data);
+            }).catch(function (error) {
+                consolge.log(error.data);
+            });
+            var module = _.find(this.project.modules, ['id', moduleId]);
+            var task = _.find(module.tasks, ['id', taskId]);
+            //axios call
+            task.is_completed = !task.is_completed;
+        }
+    },
+    data: function data() {
+        return {
+            taskEditing: false
+        };
+    }
+});
+
+/***/ }),
+/* 239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "task mb-2",
+      class: _vm.task.is_completed ? "completed-task" : ""
+    },
+    [
+      !_vm.task.is_completed
+        ? _c("i", {
+            directives: [
+              {
+                name: "tooltip",
+                rawName: "v-tooltip:bottom",
+                value: "Mark Complete",
+                expression: "'Mark Complete'",
+                arg: "bottom"
+              }
+            ],
+            staticClass: "fa fa-check-circle-o mr-2 complete-icon float-left",
+            attrs: {
+              "data-original-title": "Mark Complete",
+              "data-placement": "bottom"
+            },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                _vm.markComplete(_vm.project.id, _vm.module.id, _vm.task.id)
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.task.is_completed
+        ? _c("i", {
+            staticClass: "fa fa-check-circle-o mr-2 complete-icon float-left"
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _c("span", { staticStyle: { display: "block" } }, [
+        _vm.taskEditing
+          ? _c("span", { staticClass: "task-body" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.task.name,
+                    expression: "task.name"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.task.name },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key)
+                    ) {
+                      return null
+                    }
+                    _vm.saveTask()
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.task, "name", $event.target.value)
+                  }
+                }
+              })
+            ])
+          : _c("span", { staticClass: "task-body" }, [
+              _vm._v(
+                "\n                                " +
+                  _vm._s(_vm.task.name) +
+                  "\n                                "
+              ),
+              _c(
+                "span",
+                {
+                  staticClass: "edit-icon text-muted ml-1",
+                  on: {
+                    click: function($event) {
+                      $event.stopPropagation()
+                      _vm.editTask(_vm.task)
+                    }
+                  }
+                },
+                [
+                  _c("i", {
+                    staticClass: "fa fa-pencil",
+                    attrs: { "aria-hidden": "true" }
+                  })
+                ]
+              )
+            ]),
+        _vm._v(" "),
+        _vm.task.assigned
+          ? _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "tooltip",
+                    rawName: "v-tooltip:bottom",
+                    value: _vm.task.assigned.email,
+                    expression: "task.assigned.email",
+                    arg: "bottom"
+                  }
+                ],
+                staticClass: "avatar float-right"
+              },
+              [
+                _vm._v(
+                  "\n                            " +
+                    _vm._s(_vm.task.assigned.name[0]) +
+                    "\n                        "
+                )
+              ]
+            )
+          : _c("span", { staticClass: "badge badge-secondary float-right" }, [
+              _vm._v("Un Assigned")
+            ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "badge badge-dark float-right mr-2" }, [
+          _vm._v(_vm._s(_vm.task.status.name))
+        ]),
+        _vm._v(" "),
+        _vm.task.estimated_time
+          ? _c("span", { staticClass: "badge badge-light float-right mr-2" }, [
+              _c("i", {
+                staticClass: "fa fa-clock-o",
+                attrs: { "aria-hidden": "true" }
+              }),
+              _vm._v(
+                "\n                                " +
+                  _vm._s(_vm.task.estimated_time) +
+                  " Hrs\n                        "
+              )
+            ])
+          : _vm._e()
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-167c09f8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

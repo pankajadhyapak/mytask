@@ -32,31 +32,17 @@
                                v-model="quickTask"
                                class="form-control mb-2"
                                placeholder="Add Quick Task">
-                        <div class="task mb-2"
-                             v-for="task in module.tasks.slice().reverse()"
-                             :class=" task.is_completed ? 'completed-task' : ''">
 
-                            <i @click.prevent="markCompleted(module.id, task.id)"
-                               class="fa fa-check-circle-o mr-2 complete-icon float-left"
-                               v-tooltip:bottom="'{task.is_completed ? '/markInCompleteMsg/' : '/markCompleteMsg/'}'"
-                               :data-original-title="task.is_completed ? markInCompleteMsg : markCompleteMsg"
-                               data-placement="bottom">
-                            </i>
+                        <project-task
+                                v-for="task in module.tasks.slice().reverse()"
+                                :task="task"
+                                :module="module.id"
+                                :project="module.project_id"
+                                @click.stop="showViewTaskModalf(task.id)"
+                        >
 
-                            <span @click="showViewTaskModalf(task.id)" style="display: block">
-                            {{ task.name }}
-                            <div v-tooltip:bottom="task.assigned.email" class="avatar float-right" v-if="task.assigned">
-                                {{ task.assigned.name[0]}}
-                            </div>
+                        </project-task>
 
-                            <span v-else class="badge badge-secondary float-right">Un Assigned</span>
-                            <span class="badge badge-dark float-right mr-2">{{ task.status.name}}</span>
-                            <span class="badge badge-light float-right mr-2" v-if="task.estimated_time">
-                                <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                    {{ task.estimated_time }} Hrs
-                            </span>
-                            </span>
-                        </div>
 
                         <div class="empty_list text-center mb-5 mt-5" v-if="!module.tasks.length">
                             <i class="fa fa-list mb-3" aria-hidden="true" style="font-size:100px;color: #7c7c7d;"></i>
@@ -96,6 +82,12 @@
     </div>
 </template>
 <style>
+    span.edit-icon {
+        display:none;
+    }
+    span.task-body:hover span.edit-icon{
+        display: inline-block !important;
+    }
     .complete-icon{
         color:#333;
         font-size: 18px;
@@ -105,9 +97,6 @@
     }
     .completed-task .complete-icon{
         color:green;
-    }
-    .completed-task .complete-icon:hover{
-        color:#333;
     }
     .task {
         padding: 10px;
@@ -185,12 +174,7 @@
                 });
                 this.quickTask = "";
             },
-            markCompleted(moduleId, taskId){
-                let module = _.find(this.project.modules, ['id', moduleId]);
-                let task = _.find(module.tasks, ['id', taskId]);
-                //axios call
-                task.is_completed = !task.is_completed;
-            },
+
             toolTipText(task){
                 if(task.is_completed) {
                     return "Mark Incomplete";
@@ -205,6 +189,7 @@
                 this.showNewTaskModal = true;
             },
             showViewTaskModalf(task_id) {
+                alert("Hello");
                 this.currentTaskId = task_id;
                 this.showViewTaskModal = true;
             },
