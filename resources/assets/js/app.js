@@ -34,16 +34,22 @@ Vue.component('my-modal', require('./components/Modals/modal'));
 Vue.component('new-one', require('./components/Modals/Team/NewOne'));
 Vue.component('user-select', require('./components/user-select'));
 Vue.component('project-task', require('./pages/Project/task'));
+Vue.component('flash', require('./components/flash.vue'));
 
 Vue.use(VueRouter);
 
+
 Vue.prototype.$http = axios.create();
-const eventHub = new Vue();
+
+window.eventHub = new Vue();
+window.flash = function (message, type="success") {
+    window.eventHub.$emit('flash', {"message": message, "type": type});
+};
 
 Vue.mixin({
     data(){
         return {
-            eventHub: eventHub,
+            eventHub: window.eventHub,
             baseUrl: window.app.baseUrl,
             authUser : window.app.loggedInUser
         }

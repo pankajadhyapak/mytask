@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::patch("/api/task/{task}/complete", function (Task $task){
-    $status = Status::where("statusable_type", "App\Project")
-        ->where("statusable_id", request('project_id'))
-        ->where("defines_complete", 1)->firstOrFail();
+    return $task->markAsComplete(request('project_id'));
 });
 Route::post("/api/team", function(Request $request){
 
@@ -67,6 +65,13 @@ Route::post("/api/task", function(Request $request){
     ]);
     return $task->load('owner');
 });
+
+Route::patch("/api/task/{task}", function(Task $task){
+    $task->fill(request()->all());
+    $task->save();
+    return $task;
+});
+
 Route::delete("/api/task/{task}", function(Task $task){
     $task->delete();
     return ["success" => true];

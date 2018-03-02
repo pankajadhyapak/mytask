@@ -29,4 +29,18 @@ class Status extends Model
     {
         return $this->morphTo();
     }
+
+    public static function getComplete($projectId)
+    {
+        return static::where("statusable_type", "App\Project")
+            ->where("statusable_id", $projectId)
+            ->where("defines_complete", 1)->firstOrFail();
+    }
+
+    public static function getDefault($projectId)
+    {
+        return static::where("statusable_type", "App\Project")
+            ->where("statusable_id", $projectId)
+            ->where("default", 1)->firstOrFail();
+    }
 }

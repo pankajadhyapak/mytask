@@ -50,4 +50,12 @@ class Task extends Model
             ->exists();
     }
 
+    public function markAsComplete($projectId)
+    {
+        $status = Status::getComplete($projectId);
+        $this->status_id = $status->id;
+        $this->save();
+        return $status;
+    }
+
 }

@@ -58,8 +58,13 @@ body{
   height: 30px;
   line-height: 30px;
   width: 30px;
-  background-color: #7a6ff0;
+  background-color: #4186e0;
   margin-right: 10px;
+}
+.avatar.not-assigned {
+  background: transparent;
+  color: #333;
+  border: 1px dotted #343a40;
 }
 .comment-item{
   display: flex;

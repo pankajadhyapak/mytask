@@ -50232,7 +50232,7 @@ if (inBrowser && window.Vue) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(139);
-module.exports = __webpack_require__(233);
+module.exports = __webpack_require__(243);
 
 
 /***/ }),
@@ -50280,17 +50280,24 @@ Vue.component('modal-new-team', __webpack_require__(217));
 Vue.component('my-modal', __webpack_require__(222));
 Vue.component('new-one', __webpack_require__(225));
 Vue.component('user-select', __webpack_require__(230));
-Vue.component('project-task', __webpack_require__(237));
+Vue.component('project-task', __webpack_require__(233));
+Vue.component('flash', __webpack_require__(238));
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 
 Vue.prototype.$http = axios.create();
-var eventHub = new Vue();
+
+window.eventHub = new Vue();
+window.flash = function (message) {
+    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "success";
+
+    window.eventHub.$emit('flash', { "message": message, "type": type });
+};
 
 Vue.mixin({
     data: function data() {
         return {
-            eventHub: eventHub,
+            eventHub: window.eventHub,
             baseUrl: window.app.baseUrl,
             authUser: window.app.loggedInUser
         };
@@ -67524,7 +67531,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\nspan.edit-icon {\n    display:none;\n}\nspan.task-body:hover span.edit-icon{\n    display: inline-block !important;\n}\n.complete-icon{\n    color:#333;\n    font-size: 18px;\n}\n.complete-icon:hover{\n    color:green;\n}\n.completed-task .complete-icon{\n    color:green;\n}\n.task {\n    padding: 10px;\n    border: 1px dashed #b1afaf;\n    cursor: pointer;\n}\n.module-heading{\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border-radius: 0;\n    background: #dcdcdc;\n}\n.avatar.float-right {\n    position: relative;\n    right: 0;\n    top: -4px;\n}\n.completed-task {\n    border: 2px solid green !important;\n    color: #969696 !important;\n}\n", ""]);
+exports.push([module.i, "\n.complete-icon{\n    color:#333;\n    font-size: 18px;\n}\n.complete-icon:hover{\n    color:green;\n}\n.completed-task .complete-icon{\n    color:green;\n}\n.task {\n    padding: 10px;\n    border: 1px dashed #b1afaf;\n    cursor: pointer;\n}\n.module-heading{\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border-radius: 0;\n    background: #dcdcdc;\n}\n.avatar.float-right {\n    position: relative;\n    right: 0;\n    top: -4px;\n}\n.completed-task {\n    color: green!important;\n    opacity: .6;\n}\n", ""]);
 
 // exports
 
@@ -67535,19 +67542,6 @@ exports.push([module.i, "\nspan.edit-icon {\n    display:none;\n}\nspan.task-bod
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -67703,10 +67697,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (success) {
                 var module = _.find(vm.project.modules, ['id', success.data.module_id]);
                 module.tasks.push(success.data);
-                swal({ title: "Great", text: "Task Added!", icon: "success", timer: 1000 });
-
-                console.log(module);
-            }, function (error) {});
+                flash("Great !! Task Added");
+            }, function (error) {
+                flash("Unable to Create task", "danger");
+            });
             this.quickTask = "";
         },
         toolTipText: function toolTipText(task) {
@@ -67723,7 +67717,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.showNewTaskModal = true;
         },
         showViewTaskModalf: function showViewTaskModalf(task_id) {
-            alert("Hello");
             this.currentTaskId = task_id;
             this.showViewTaskModal = true;
         },
@@ -67793,15 +67786,19 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-md-4" }, [
-                  _vm._v("\n                    Tasks "),
-                  _c("small", [
-                    _vm._v(" - "),
-                    _c("i", {
-                      staticClass: "fa fa-clock-o mr-1",
-                      attrs: { "aria-hidden": "true" }
-                    }),
-                    _vm._v(_vm._s(module.total_estimated) + " Hrs")
-                  ]),
+                  module.total_estimated
+                    ? _c("span", [
+                        _vm._v("\n                        Tasks "),
+                        _c("small", [
+                          _vm._v(" - "),
+                          _c("i", {
+                            staticClass: "fa fa-clock-o mr-1",
+                            attrs: { "aria-hidden": "true" }
+                          }),
+                          _vm._v(_vm._s(module.total_estimated) + " Hrs")
+                        ])
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
                   _c(
                     "button",
@@ -67829,7 +67826,6 @@ var render = function() {
                 _c("div", { staticClass: "card card-body" }, [
                   _c(
                     "div",
-                    {},
                     [
                       _c("input", {
                         directives: [
@@ -67862,16 +67858,19 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      _vm._l(module.tasks.slice().reverse(), function(task) {
+                      _vm._l(module.tasks.slice().reverse(), function(
+                        task,
+                        index
+                      ) {
                         return _c("project-task", {
+                          key: index,
                           attrs: {
                             task: task,
                             module: module.id,
                             project: module.project_id
                           },
                           on: {
-                            click: function($event) {
-                              $event.stopPropagation()
+                            clicked: function($event) {
                               _vm.showViewTaskModalf(task.id)
                             }
                           }
@@ -70806,27 +70805,22 @@ if (false) {
 
 /***/ }),
 /* 233 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 234 */,
-/* 235 */,
-/* 236 */,
-/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(234)
+}
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(238)
+var __vue_script__ = __webpack_require__(236)
 /* template */
-var __vue_template__ = __webpack_require__(239)
+var __vue_template__ = __webpack_require__(237)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -70861,7 +70855,47 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 238 */
+/* 234 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(235);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("69172fb0", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-167c09f8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./task.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-167c09f8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./task.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.task-title{\n    overflow: hidden;\n    margin-right: 20px;\n}\n.TaskName-input {\n    /*background: transparent;*/\n    border-radius: 0;\n    display: block;\n    height: 100%;\n    outline: 0;\n    overflow: hidden;\n    position: absolute;\n    resize: none;\n    top: 0;\n    width: 95%;\n}\n.TaskName-input {\n    border: 0;\n    margin: 0;\n    padding: 5px;\n    text-rendering: optimizeSpeed;\n}\n.task-item::after {\n    border-bottom: 1px solid #e0e6e8;\n    bottom: -2px;\n    content: \"\";\n    display: block;\n    left: 2px;\n    pointer-events: none;\n    position: absolute;\n    right: 2px;\n}\n.task-item{\n    border-bottom: 1px solid transparent;\n    border-top: 1px solid transparent;\n    height: 40px;\n    -webkit-box-align: center;\n    -ms-flex-align: center;\n    align-items: center;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: justify;\n    -ms-flex-pack: justify;\n    justify-content: space-between;\n    overflow: visible;\n    padding: 0 2px;\n    position: relative;\n    -webkit-transition: box-shadow 0s ease-in;\n    -webkit-transition: -webkit-box-shadow 0s ease-in;\n    transition: -webkit-box-shadow 0s ease-in;\n    transition: box-shadow 0s ease-in;\n    transition: box-shadow 0s ease-in, -webkit-box-shadow 0s ease-in;\n    white-space: nowrap;\n}\n.left-item{\n    -webkit-box-align: center;\n    -ms-flex-align: center;\n    align-items: center;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-flex: 1;\n    -ms-flex: 1 1000 auto;\n    flex: 1 1000 auto;\n    height: 100%;\n    -webkit-box-pack: start;\n    -ms-flex-pack: start;\n    justify-content: flex-start;\n    min-width: 1px;\n    position: relative;\n}\n.right-item{\n    -webkit-box-align: center;\n    -ms-flex-align: center;\n    align-items: center;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-flex: 0;\n    -ms-flex: 0 1 auto;\n    flex: 0 1 auto;\n    height: 100%;\n    -webkit-box-pack: end;\n    -ms-flex-pack: end;\n    justify-content: flex-end;\n    max-width: 75%;\n    overflow: hidden;\n}\nspan.edit-icon {\n    display:none;\n    font-size: 12px;\n}\n.task-title:hover span.edit-icon{\n    display: inline-block !important;\n    /*position: absolute;*/\n    /*right: 6px;*/\n    /*top: 10px;*/\n    font-size: 12px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 236 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70910,31 +70944,155 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['task', 'module', 'project'],
+
     mounted: function mounted() {
         console.log('Component mounted.');
     },
 
+
     methods: {
         saveTask: function saveTask() {
+            var vm = this;
             //make ajax call and save data
+            axios.patch("/api/task/" + this.task.id, { name: vm.task.name }).then(function (success) {
+                flash("Task Updated");
+            }).catch(function (error) {
+                flash("Unable to update", "danger");
+            });
             this.taskEditing = false;
         },
         editTask: function editTask(task) {
             this.taskEditing = true;
         },
-        markComplete: function markComplete(projectId, moduleId, taskId) {
-            axios.patch("/api/task/" + taskId + "/complete", { project_id: projectId, module_id: moduleId }).then(function (response) {
-                consolge.log(response.data);
+        markComplete: function markComplete(task) {
+            var vm = this;
+            task.is_completed = true;
+            //projectId, moduleId, taskId
+            axios.patch("/api/task/" + task.id + "/complete", { "project_id": vm.project }).then(function (success) {
+                flash("Marked as complete");
             }).catch(function (error) {
-                consolge.log(error.data);
+                flash("Unable to update", "danger");
             });
-            var module = _.find(this.project.modules, ['id', moduleId]);
-            var task = _.find(module.tasks, ['id', taskId]);
-            //axios call
-            task.is_completed = !task.is_completed;
         }
     },
     data: function data() {
@@ -70945,7 +71103,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 239 */
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -70955,100 +71113,147 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "task mb-2",
+      staticClass: "task-item",
       class: _vm.task.is_completed ? "completed-task" : ""
     },
     [
-      !_vm.task.is_completed
-        ? _c("i", {
-            directives: [
-              {
-                name: "tooltip",
-                rawName: "v-tooltip:bottom",
-                value: "Mark Complete",
-                expression: "'Mark Complete'",
-                arg: "bottom"
-              }
-            ],
-            staticClass: "fa fa-check-circle-o mr-2 complete-icon float-left",
-            attrs: {
-              "data-original-title": "Mark Complete",
-              "data-placement": "bottom"
-            },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                _vm.markComplete(_vm.project.id, _vm.module.id, _vm.task.id)
-              }
+      _c(
+        "div",
+        {
+          staticClass: "left-item",
+          on: {
+            click: function($event) {
+              $event.stopPropagation()
+              _vm.$emit("clicked")
             }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.task.is_completed
-        ? _c("i", {
-            staticClass: "fa fa-check-circle-o mr-2 complete-icon float-left"
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _c("span", { staticStyle: { display: "block" } }, [
-        _vm.taskEditing
-          ? _c("span", { staticClass: "task-body" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.task.name,
-                    expression: "task.name"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "text" },
-                domProps: { value: _vm.task.name },
-                on: {
-                  keyup: function($event) {
-                    if (
-                      !("button" in $event) &&
-                      _vm._k($event.keyCode, "enter", 13, $event.key)
-                    ) {
-                      return null
+          }
+        },
+        [
+          _c("div", { staticClass: "task-icon" }, [
+            !_vm.task.is_completed
+              ? _c("i", {
+                  directives: [
+                    {
+                      name: "tooltip",
+                      rawName: "v-tooltip:bottom",
+                      value: "Mark Complete",
+                      expression: "'Mark Complete'",
+                      arg: "bottom"
                     }
-                    _vm.saveTask()
+                  ],
+                  staticClass:
+                    "fa fa-check-circle-o mr-2 complete-icon float-left",
+                  attrs: {
+                    "data-original-title": "Mark Complete",
+                    "data-placement": "bottom"
                   },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.task, "name", $event.target.value)
-                  }
-                }
-              })
-            ])
-          : _c("span", { staticClass: "task-body" }, [
-              _vm._v(
-                "\n                                " +
-                  _vm._s(_vm.task.name) +
-                  "\n                                "
-              ),
-              _c(
-                "span",
-                {
-                  staticClass: "edit-icon text-muted ml-1",
                   on: {
                     click: function($event) {
                       $event.stopPropagation()
-                      _vm.editTask(_vm.task)
+                      _vm.markComplete(_vm.task)
                     }
                   }
-                },
-                [
-                  _c("i", {
-                    staticClass: "fa fa-pencil",
-                    attrs: { "aria-hidden": "true" }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.task.is_completed
+              ? _c("i", {
+                  staticClass:
+                    "fa fa-check-circle-o mr-2 complete-icon float-left"
+                })
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "task-title" }, [
+            _vm.taskEditing
+              ? _c("div", { staticClass: "task-body" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.name,
+                        expression: "task.name"
+                      }
+                    ],
+                    staticClass: "TaskName-input override-focus-border",
+                    attrs: { type: "text" },
+                    domProps: { value: _vm.task.name },
+                    on: {
+                      click: function($event) {
+                        $event.stopPropagation()
+                      },
+                      keyup: function($event) {
+                        if (
+                          !("button" in $event) &&
+                          _vm._k($event.keyCode, "enter", 13, $event.key)
+                        ) {
+                          return null
+                        }
+                        _vm.saveTask()
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.task, "name", $event.target.value)
+                      }
+                    }
                   })
-                ]
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.taskEditing
+              ? _c("div", { staticClass: "task-text" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.task.name) +
+                      "\n            "
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.taskEditing
+              ? _c(
+                  "span",
+                  {
+                    staticClass: "edit-icon text-muted ml-1",
+                    on: {
+                      click: function($event) {
+                        $event.stopPropagation()
+                        _vm.editTask(_vm.task)
+                      }
+                    }
+                  },
+                  [
+                    _c("i", {
+                      staticClass: "fa fa-pencil",
+                      attrs: { "aria-hidden": "true" }
+                    })
+                  ]
+                )
+              : _vm._e()
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "right-item" }, [
+        _c("span", { staticClass: "badge badge-dark mr-2" }, [
+          _vm._v(_vm._s(_vm.task.status.name))
+        ]),
+        _vm._v(" "),
+        _vm.task.estimated_time
+          ? _c("span", { staticClass: "badge badge-light mr-2" }, [
+              _c(
+                "i",
+                {
+                  staticClass: "fa fa-clock-o",
+                  attrs: { "aria-hidden": "true" }
+                },
+                [_vm._v(" " + _vm._s(_vm.task.estimated_time) + " Hrs")]
               )
-            ]),
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _vm.task.assigned
           ? _c(
@@ -71063,37 +71268,32 @@ var render = function() {
                     arg: "bottom"
                   }
                 ],
-                staticClass: "avatar float-right"
+                staticClass: "avatar"
               },
               [
                 _vm._v(
-                  "\n                            " +
+                  "\n            " +
                     _vm._s(_vm.task.assigned.name[0]) +
-                    "\n                        "
+                    "\n        "
                 )
               ]
             )
-          : _c("span", { staticClass: "badge badge-secondary float-right" }, [
-              _vm._v("Un Assigned")
-            ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "badge badge-dark float-right mr-2" }, [
-          _vm._v(_vm._s(_vm.task.status.name))
-        ]),
-        _vm._v(" "),
-        _vm.task.estimated_time
-          ? _c("span", { staticClass: "badge badge-light float-right mr-2" }, [
-              _c("i", {
-                staticClass: "fa fa-clock-o",
-                attrs: { "aria-hidden": "true" }
-              }),
-              _vm._v(
-                "\n                                " +
-                  _vm._s(_vm.task.estimated_time) +
-                  " Hrs\n                        "
-              )
-            ])
-          : _vm._e()
+          : _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "tooltip",
+                    rawName: "v-tooltip:bottom",
+                    value: "Assign Task",
+                    expression: "'Assign Task'",
+                    arg: "bottom"
+                  }
+                ],
+                staticClass: "avatar not-assigned"
+              },
+              [_vm._v("\n            UA\n        ")]
+            )
       ])
     ]
   )
@@ -71107,6 +71307,192 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-167c09f8", module.exports)
   }
 }
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(239)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(241)
+/* template */
+var __vue_template__ = __webpack_require__(242)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/flash.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e8de3f2e", Component.options)
+  } else {
+    hotAPI.reload("data-v-e8de3f2e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(240);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("20ee4c5e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-e8de3f2e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flash.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-e8de3f2e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flash.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.alert-flash {\n    position: fixed;\n    right: 25px;\n    bottom: 25px;\n    border-left: 10px solid;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 241 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['message'],
+    data: function data() {
+        return {
+            body: '',
+            show: false,
+            type: 'success'
+        };
+    },
+    created: function created() {
+        var _this = this;
+
+        if (this.message) {
+            this.flash(this.message);
+        }
+        this.eventHub.$on('flash', function (message) {
+            return _this.flash(message.message, message.type);
+        });
+    },
+
+    methods: {
+        flash: function flash(message) {
+            var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "success";
+
+            this.body = message;
+            this.show = true;
+            this.type = type;
+            this.hide();
+        },
+        hide: function hide() {
+            var _this2 = this;
+
+            setTimeout(function () {
+                _this2.show = false;
+            }, 3000);
+        }
+    }
+});
+
+/***/ }),
+/* 242 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
+      ],
+      class: "alert alert-" + this.type + " alert-flash",
+      attrs: { role: "alert" }
+    },
+    [
+      _vm.type == "success" ? _c("strong", [_vm._v("Success!")]) : _vm._e(),
+      _vm._v(" "),
+      _vm.type == "danger" ? _c("strong", [_vm._v("Opps!")]) : _vm._e(),
+      _vm._v("\n    " + _vm._s(_vm.body) + "\n")
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e8de3f2e", module.exports)
+  }
+}
+
+/***/ }),
+/* 243 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
