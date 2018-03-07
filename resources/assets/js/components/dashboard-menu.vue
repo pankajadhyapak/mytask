@@ -1,51 +1,75 @@
-<template>
-    <div class="col-md-3">
-    <nav>
-        <div class="card card-default ">
-            <div class="card-header dashboard-menu"><i class="fa fa-users" aria-hidden="true"></i>
-                Teams <span>({{ teams.length}})</span>
-                <button
-                        class="btn btn-outline-light btn-sm float-right"
-                        @click="showNewTeamModal = true"
-                >New Team</button>
+<template xmlns:v-tooltip="http://www.w3.org/1999/xhtml">
+    <div class="col-md-2 mainSidebar-container">
+        <aside id="mainSidebar">
+            <div class="d-flex align-items-center" style="padding-left: 15px;">
+                <div class="left-box">
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                    &nbsp;Teams <span>({{ teams.length}})</span>
+                </div>
+                <div class="right-box">
+                    <i @click="showNewTeamModal = true"
+                       v-tooltip:bottom="'Create New Team'"
+                       class="fa fa-plus-circle"
+                       style="font-size: 18px;"
+                       aria-hidden="true"></i>
+                </div>
             </div>
+            <hr>
 
-
-            <div class="card-body dashboard-menu">
-                <ul class="list-unstyled">
-                    <li v-for="(team, index) in teams" :key="index">
-                        <router-link :to="{path: '/dashboard/team/' + team.id}">
-                            <span>{{team.name}}</span>
-
+            <div class="sidebar-menu">
+                    <div class="sidebar-menu-item" v-for="(team, index) in teams" :key="index">
+                        <router-link
+                                :to="{path: '/team/' + team.id}"
+                                active-class="active"
+                                style="display:block"
+                        >
+                            <strong class="text-capitalize">{{team.name}}</strong>
                         </router-link>
+                        <div class="d-flex align-items-center">
+                            <div class="left-box">
+                                <small class="text-muted mt-1">
+                                    Projects
+                                </small>
+                            </div>
+                            <div class="right-box">
+                                <i @click="showNewTeamModal = true"
+                                   v-tooltip:bottom="'Create New Project'"
+                                   class="fa fa-plus-circle"
+                                   style="font-size: 14px;"
+                                   aria-hidden="true"></i>
+                            </div>
+                        </div>
 
-                        <ul class="ml-2 list-unstyled">
 
-                            <small>Projects </small>
+                        <div class="sidebar-menu-item" v-for="(project, pindex) in team.projects" :key="pindex">
+                            <router-link
+                                    :to="{path: '/project/' + project.id}"
+                                    active-class="active-p"
+                                    class="text-capitalize"
+                                    style="display:block;font-size: 12px;margin-left: 10px;">
+                                {{project.name}}
+                            </router-link>
 
-                            <span class="float-right">
-                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                            </span>
-
-                            <li v-for="(project, index) in team.projects" :key="index">
-                                <router-link :to="{path: '/dashboard/project/' + project.id}">
-                                    <small>{{project.name}}</small>
-                                </router-link>
-                            </li>
-                        </ul>
-                        <hr style="border-top:1px solid rgb(99, 99, 99)">
-                    </li>
-
-                </ul>
+                        </div>
+                        <hr>
+                    </div>
             </div>
-        </div>
-    </nav>
-        <modal-new-team v-if="showNewTeamModal" @closed="showNewTeamModal = false"></modal-new-team>
-        <new-one v-if="showNewModal" @closed="showNewModal = false"></new-one>
+        </aside>
+        <modal-new-team v-if="showNewTeamModal"></modal-new-team>
     </div>
-
 </template>
 <style scoped>
+    hr{
+        padding: 1px;
+    }
+    .mainSidebar-container{
+        box-shadow: 2px 0 5px #c1c1c1;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    #mainSidebar a {
+        color: #495057;
+    }
     .dashboard-menu{
         background: #222b37;
         color:#fff;
@@ -55,6 +79,20 @@
     }
     .dashboard-menu li{
         padding:8px
+    }
+    .sidebar-menu-item a.active {
+        color: #7746ec !important;
+    }
+    .sidebar-menu-item {
+        padding: 10px 0px;
+    }
+    .sidebar-menu {
+        padding: 10px;
+    }
+    .active-p{
+        background: #7746ec !important;
+        color: #fff !important;
+        padding: 6px;
     }
 </style>
 <script>

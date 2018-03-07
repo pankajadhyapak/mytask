@@ -71,7 +71,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        return $task->load('module.project', 'comments', 'worklogs');
+        $task->load('module.project', 'comments', 'worklogs');
         //return $task;
         return view('task.show', compact('task'));
     }

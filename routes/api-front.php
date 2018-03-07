@@ -12,6 +12,18 @@ use Illuminate\Support\Facades\Route;
 Route::patch("/api/task/{task}/complete", function (Task $task){
     return $task->markAsComplete(request('project_id'));
 });
+
+Route::post("/api/task/{task}/work-log", function(Task $task, Request $request){
+
+    $log =  $task->worklogs()->create([
+        'user_id' => auth()->id(),
+        'comment' => $request->get('comment'),
+        'hours' => $request->get('hours'),
+        'date' => $request->get('date')
+    ]);
+    return $log->load("owner");
+
+});
 Route::post("/api/team", function(Request $request){
 
     $team = Team::create([
@@ -77,7 +89,7 @@ Route::delete("/api/task/{task}", function(Task $task){
     return ["success" => true];
 });
 Route::get("/api/project/{project}", function(Project $project){
-    return $project->load('modules.tasks', 'team.members');
+    return $project->load('modules.tasks', 'team.members', 'statuses');
 });
 
 Route::get("/api/module/{module}/tasks", function (Module $module){

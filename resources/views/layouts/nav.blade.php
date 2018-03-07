@@ -18,6 +18,7 @@
                         <li>
                             <router-link to="/dashboard/about" class="nav-link text-primary">About</router-link>
                         </li>
+
                     @endauth
                 </ul>
 
@@ -28,7 +29,12 @@
                         <li class="nav-item"><a class="nav-link text-primary" href="{{ route('login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-link text-primary" href="{{ route('register') }}">Register</a></li>
                     @else
-
+                        <li class="nav-item">
+                            <input
+                                    v-model="searchKey"
+                                    style="background: #f8f9fa;"
+                                    class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link has-activity-indicator">
                                 <i class="navbar-icon icon fa fa-bell">
@@ -42,7 +48,7 @@
                                 </span>
                                  <span class="caret"></span>
                             </a>
-                            <ul role="menu" class="dropdown-menu">
+                            <ul role="menu" class="dropdown-menu user-nav">
                                 <li class="dropdown-header">Settings</li>
                                 <li>
                                     <router-link

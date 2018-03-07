@@ -9,23 +9,23 @@ import Setting from './pages/Settings'
 
 let routes = [
     {
-        path: '/dashboard',
+        path: '/',
         component: Home
     },
     {
-        path: '/dashboard/settings',
+        path: '/settings',
         component: Setting
     },
     {
-        path: '/dashboard/about',
+        path: '/about',
         component: About
     },
     {
-        path: '/dashboard/team/:id',
+        path: '/team/:id',
         component: SingleTeam
     },
     {
-        path: '/dashboard/project/:id',
+        path: '/project/:id',
         component: SingleProject,
         children: [
             // {
@@ -39,12 +39,13 @@ let routes = [
         ]
     },
     {
-        path: "/dashboard/*",
+        path: "*",
         component: PageNotFound
     }
 
 ];
 export default new VueRouter({
     mode: 'history',
+    base: '/dashboard/',
     routes
 });

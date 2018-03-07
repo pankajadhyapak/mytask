@@ -36,9 +36,13 @@
         </div>
         <div class="right-item">
             <!-- TODO Add popovers instead of tooltip -->
-            <span class="badge badge-dark mr-2">{{ task.status.name}}</span>
+            <span class="badge mr-2" :class="task.is_completed ? 'badge-success': 'badge-dark'">{{ task.status.name}}</span>
             <span class="badge badge-light mr-2" v-if="task.estimated_time">
-                <i class="fa fa-clock-o" aria-hidden="true">&nbsp;{{ task.estimated_time }} Hrs</i>
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                &nbsp;{{ task.estimated_time }} Hrs
+            </span>
+            <span class="badge badge-light mr-2" v-tooltip:bottom="task.due_date" v-if="task.due_date" >
+                {{ formatDate(task.due_date, "MMM DD") }}
             </span>
             <div v-tooltip:bottom="task.assigned.email" class="avatar" v-if="task.assigned">
                 {{ task.assigned.name[0]}}

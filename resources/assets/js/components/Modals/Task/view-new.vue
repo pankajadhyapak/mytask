@@ -1,21 +1,19 @@
 <template>
-    <div class="modal docked docked-right in" id="viewTask" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+    <div class="modal docked docked-right in" @click.stop="closeModal()"
+         id="viewTask">
+        <div class="modal-dialog modal-lg" role="document" @click.stop="">
             <div class="modal-content">
                 <div class="modal-header ">
                     <div class="d-flex align-items-center" style="width:100%">
-
                         <div class="project-title">
                             <h4>{{ _dis(task.name) }}</h4>
                         </div>
-
                         <div class="filter-btns">
                             <button class="btn btn-outline-success btn-sm ml-3" type="button">
                                 Update Task
                             </button>
                         </div>
                     </div>
-
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -30,7 +28,7 @@
                             <hr>
                             <h5>Tags</h5>
                             <p>
-                                  coming soon...
+                                coming soon...
 
                             </p>
                             <hr>
@@ -49,27 +47,21 @@
                                     </form>
                                 </div>
                                 <div class="comment-list" v-if="dataLoaded">
-                                    <div class="comment-item mb-4 row" v-for="comment in task.comments">
-
-                                            <div class="col-md-1">
-                                                <div class="avatar">
-                                                    {{comment.owner.name[0]}}
-                                                </div>
+                                    <div class="comment-item mb-4" v-for="comment in task.comments">
+                                        <div class="avatar">
+                                            {{comment.owner.name[0]}}
+                                        </div>
+                                        <div>
+                                            <div class="comment-meta">
+                                                <span class="comment-author text-dark">{{comment.owner.display_name}}</span>
+                                                <small>
+                                                    <span class="comment-date text-muted">{{formNow(comment.created_at)}} <em>said</em></span>
+                                                </small>
                                             </div>
-                                            <div class="col-md-11">
-                                                <div>
-                                                    <div class="comment-meta">
-                                                        <span class="comment-author text-dark">{{comment.owner.display_name}}</span>
-                                                        <small>
-                                                            <span class="comment-date text-muted">{{formNow(comment.created_at)}} <em>said</em></span>
-                                                        </small>
-                                                    </div>
-                                                    <div class="comment-body text-secondary">
-                                                        {{comment.body}}
-                                                    </div>
-                                                </div>
+                                            <div class="comment-body text-secondary">
+                                                {{comment.body}}
                                             </div>
-
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -106,15 +98,15 @@
                                 <div class="col-md-6">
 
                                     <h5>Due Date</h5>
-                            <p>
-                                {{ _dis(task.due_date) }}
-                            </p>
+                                    <p>
+                                        {{ _dis(task.due_date) }}
+                                    </p>
                                 </div>
                                 <div class="col-md-6">
                                     <h5>Created Date</h5>
-                            <p>
-                                {{ _dis(formatDate(task.created_at)) }}
-                            </p>
+                                    <p>
+                                        {{ _dis(formatDate(task.created_at)) }}
+                                    </p>
                                 </div>
                             </div>
                             <hr>
@@ -125,44 +117,18 @@
                             <hr>
                             <div class="progress mt-2 mb-2">
                                 <div
-                                    class="progress-bar progress-bar-striped"
-                                    role="progressbar"
-                                    :aria-valuenow="(totalHoursLogged/task.estimated_time*100)"
-                                    aria-valuemin="0"
-                                    :aria-valuemax="task.estimated_time"
-                                    :style="progressBarStyle">
+                                        class="progress-bar progress-bar-striped"
+                                        role="progressbar"
+                                        :aria-valuenow="(totalHoursLogged/task.estimated_time*100)"
+                                        aria-valuemin="0"
+                                        :aria-valuemax="task.estimated_time"
+                                        :style=" 'width:'+(totalHoursLogged/task.estimated_time*100)+'%'">
                                 </div>
                             </div>
                             <h5 class="mb-3">
                                 Work Log - <small class="text-muted">{{totalHoursLogged}} Hrs Logged</small>
-                                <button class="btn btn-primary btn-sm float-right" data-toggle="collapse" data-target="#addWorkLog" aria-expanded="false" aria-controls="collapseExample">
-                                    Log
-                                </button>
+                                <button @click="showWorkLogModal = true" class="btn btn-primary btn-sm float-right">Log</button>
                             </h5>
-                            <div class="collapse" id="addWorkLog">
-                                <div class="">
-                                    <form @submit.prevent="addWorkLog()" style="padding: 10px">
-                                        <div class="row">
-                                            <div class="col-md-3" style="padding:0px">
-                                                <input type="text"
-                                                       v-model="newWorkLog.hours"
-                                                       class="form-control form-control-sm"
-                                                       placeholder="Hrs">
-                                            </div>
-                                            <div class="col-md-7" style="padding:0px">
-                                                <input type="date"
-                                                       v-model="newWorkLog.date"
-                                                       class="form-control form-control-sm">
-                                            </div>
-                                            <div class="col-md-2" style="padding:0px">
-                                                <button type="submit" class="btn-outline-success btn btn-sm">
-                                                    +
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
                             <div class="log-list mb-3" v-for="log in task.worklogs">
                                 <div class="avatar">
                                     {{ log.owner.name[0] }}
@@ -178,10 +144,14 @@
                 </div>
             </div>
         </div>
-        <!--<worklogmodal v-if="showWorkLogModal"></worklogmodal>-->
+        <worklogmodal v-if="showWorkLogModal"></worklogmodal>
     </div>
 </template>
 <style scoped>
+    .modal{
+        display: block;
+        background: rgba(0, 0, 0, 0.52);
+    }
     .modal-lg {
         max-width: 75%;
     }
@@ -197,13 +167,13 @@
         mounted() {
             let vm = this;
             let modal = $('#viewTask');
-            modal.modal();
+            //modal.modal();
             modal.on('hidden.bs.modal', function (e) {
                 vm.eventHub.$emit('viewTaskModalClosed');
             });
 
             axios.get("/api/users").then(function (response) {
-               vm.options =  response.data;
+                vm.options =  response.data;
             });
 
             axios.get("/api/task/"+this.task_id).then(function (response) {
@@ -219,10 +189,6 @@
                 dataLoaded: false,
                 showWorkLogModal: false,
                 options: [],
-                newWorkLog:{
-                    hours:'',
-                    date:''
-                },
                 newComment: {
                     body: "",
                     type: "Task",
@@ -231,20 +197,8 @@
             }
         },
         methods:{
-            addWorkLog(){
-                let vm = this;
-                console.log(vm.newWorkLog);
-                axios.post("/api/task/"+this.task_id+"/work-log", vm.newWorkLog)
-                    .then(function (success) {
-                        vm.task.worklogs.push(success.data);
-                        flash("Work Log Added")
-                        $('#addWorkLog').collapse('hide')
-                        vm.newWorkLog.date = "";
-                        vm.newWorkLog.hours = "";
-                    })
-                    .catch(function (error) {
-                        flash("Error Adding Work Log", "danger")
-                    })
+            closeModal(){
+                this.$emit("closed");
             },
             addComment(){
                 let vm = this;
@@ -291,18 +245,10 @@
             }
         },
         computed:{
-            progressBarStyle(){
-                if(this.task.estimated_time){
-                    let completed = this.totalHoursLogged/this.task.estimated_time*100;
-                    return 'width:'+completed+'%'
-                }else{
-                    return 'width:0%';
-                }
-            },
             totalHoursLogged(){
                 let hrs = 0;
                 this.task.worklogs.forEach(function(log){
-                    hrs = hrs+ parseInt(log.hours);
+                    hrs = hrs+log.hours;
                 });
                 return hrs;
             }

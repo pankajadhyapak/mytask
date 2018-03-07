@@ -34,6 +34,7 @@ Vue.component('my-modal', require('./components/Modals/modal'));
 Vue.component('new-one', require('./components/Modals/Team/NewOne'));
 Vue.component('user-select', require('./components/user-select'));
 Vue.component('project-task', require('./pages/Project/task'));
+Vue.component('project-module-card', require('./pages/Project/module'));
 Vue.component('flash', require('./components/flash.vue'));
 
 Vue.use(VueRouter);

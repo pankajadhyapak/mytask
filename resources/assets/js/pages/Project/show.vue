@@ -1,76 +1,29 @@
 <template>
     <div class="container">
-        <h4>
-            {{ project.name}} Project - <small class="text-muted">{{ project.modules.length}} Modules</small>
-            <button class="btn btn-outline-dark btn-sm float-right">New Module</button>
-        </h4>
-        <div class="module-container mb-3" v-for="module in project.modules" :key="module.id">
-            <div class="card card-header module-heading">
-                <div class="row">
-                    <div class="col-md-8"
-                         style="cursor:pointer"
-                         data-toggle="collapse"
-                         :data-target="'#module'+module.id">
-                        {{ module.name}} - <small>{{ module.tasks.length }} Tasks</small>
-                    </div>
-                    <div class="col-md-4">
-                        <span v-if="module.total_estimated">
-                            Tasks <small> - <i class="fa fa-clock-o mr-1" aria-hidden="true"></i>{{ module.total_estimated }} Hrs</small>
-                        </span>
-                        <button class="btn btn-outline-primary btn-sm float-right" @click="showNewTaskModalf(module.id)">New Task</button>
-                    </div>
-                </div>
+
+        <div class="d-flex align-items-center">
+            <div class="project-title">
+                <h4>{{ project.name}} Project - <small class="text-muted">{{ project.modules.length}} Modules</small></h4>
             </div>
-            <div class="collapse show" :id="'module'+module.id">
-                <div class="card card-body">
-                    <div>
-                        <input type="text"
-                               @keyup.enter="addQuickTask(module.id)"
-                               v-model="quickTask"
-                               class="form-control mb-2"
-                               placeholder="Add Quick Task">
-
-                            <project-task
-                                :task="task"
-                                :module="module.id"
-                                :project="module.project_id"
-                                v-for="(task, index) in module.tasks.slice().reverse()"
-                                :key="index"
-                                @clicked="showViewTaskModalf(task.id)">
-
-                            </project-task>
-
-                        <div class="empty_list text-center mb-5 mt-5" v-if="!module.tasks.length">
-                            <i class="fa fa-list mb-3" aria-hidden="true" style="font-size:100px;color: #7c7c7d;"></i>
-                            <h4>You Dont have any Task!!</h4>
-                            <button class="btn btn-outline-primary mt-2"
-                                    @click="showNewTaskModalf(module.id)">Create New Task</button>
-                        </div>
-                    </div>
+            <div class="filter-btns">
+                <div class="dropdown">
+                  <button class="btn btn-secondary btn-sm mr-2 dropdown-toggle text-capitalize" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-filter mr-1" aria-hidden="true"></i>
+                      {{filterType}}
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button @click="filterBy('all')" class="dropdown-item" type="button">All Tasks</button>
+                    <button @click="filterBy('complete')" class="dropdown-item" type="button">Completed Tasks</button>
+                    <button @click="filterBy('in complete')" class="dropdown-item" type="button">In Complete Tasks</button>
+                  </div>
                 </div>
+                <button class="btn btn-outline-dark btn-sm float-right">New Module</button>
             </div>
         </div>
-        <!--<div class="row">-->
-        <!--<div class="col-md-4">-->
-        <!--<div class="card card-default">-->
-        <!--<div class="card-header">Modules</div>-->
-        <!--<div class="card-body">-->
-        <!--<router-link-->
-        <!--class="nav-link"-->
-        <!--v-for="module in project.modules" :key="module.id"-->
-        <!--:to="{path: '/dashboard/project/' + project.id + '/module/' + module.id}"-->
-        <!--&gt;-->
-        <!--{{ module.name }}-->
-        <!--</router-link>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-md-8">-->
-        <!--<router-view></router-view>-->
-        <!--</div>-->
-        <!--</div>-->
-        <modal-task-new v-if="showNewTaskModal" :module_id="currentModuleId"></modal-task-new>
-        <modal-task-view v-if="showViewTaskModal" :task_id="currentTaskId"></modal-task-view>
+
+        <div class="module-container mb-3" v-for="module in project.modules" :key="module.id">
+            <project-module-card :module="module"></project-module-card>
+        </div>
     </div>
 </template>
 <style>
@@ -80,10 +33,10 @@
         font-size: 18px;
     }
     .complete-icon:hover{
-        color:green;
+        color: #28a745;
     }
     .completed-task .complete-icon{
-        color:green;
+        color: #28a745;
     }
     .task {
         padding: 10px;
@@ -103,8 +56,20 @@
     }
 
     .completed-task {
-        color: green!important;
+        color: #28a745 !important;
         opacity: .6;
+    }
+    .project-title{
+        display: flex;
+        align-items: left;
+        justify-content: flex-start;
+        flex: 1;
+    }
+    .filter-btns{
+        display: flex;
+        align-items: center;
+        flex: 1;
+        justify-content: flex-end;
     }
 </style>
 <script>
@@ -112,16 +77,7 @@
     export default {
         mounted() {
             let vm = this;
-
             vm.fetchProject(this.$route.params.id);
-
-            vm.eventHub.$on('newTaskModalClosed', function(e) {
-                vm.showNewTaskModal = false;
-            });
-            vm.eventHub.$on('viewTaskModalClosed', function(e) {
-                vm.showViewTaskModal = false;
-            });
-
         },
         data(){
             return {
@@ -130,8 +86,8 @@
                 showNewTaskModal: false,
                 currentModuleId: null,
                 showViewTaskModal: false,
-                currentTaskId: null,
                 quickTask: "",
+                filterType: "all",
                 markCompleteMsg:"Mark Done",
                 markInCompleteMsg: "Mark InComplete"
             }
@@ -141,41 +97,13 @@
                 this.fetchProject(to.params.id);
             }
         },
+        computed: {
+
+        },
         methods:{
-            addQuickTask(moduleId){
-                let vm = this;
-                console.log(moduleId);
-
-                axios.post("/api/task", {
-                    name: vm.quickTask,
-                    project_id: vm.project.id,
-                    module_id: moduleId
-                }).then(function (success) {
-                    let module = _.find(vm.project.modules, ['id', success.data.module_id]);
-                    module.tasks.push(success.data);
-                    flash("Great !! Task Added");
-                }, function (error) {
-                    flash("Unable to Create task", "danger");
-                });
-                this.quickTask = "";
-            },
-
-            toolTipText(task){
-                if(task.is_completed) {
-                    return "Mark Incomplete";
-                }
-                return "Mark Complete";
-            },
-            test(){
-                console.log("Hello");
-            },
-            showNewTaskModalf(module_id) {
-                this.currentModuleId = module_id;
-                this.showNewTaskModal = true;
-            },
-            showViewTaskModalf(task_id) {
-                this.currentTaskId = task_id;
-                this.showViewTaskModal = true;
+            filterBy(type){
+                this.filterType = type;
+                this.eventHub.$emit("filterBy", type);
             },
             fetchProject(id){
                 let vm = this;
