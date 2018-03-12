@@ -66483,6 +66483,12 @@ module.exports = Vue$3;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_Module_AllTask___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__pages_Module_AllTask__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_Settings__ = __webpack_require__(193);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_Settings___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__pages_Settings__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_Project_ProjectRoot__ = __webpack_require__(255);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_Project_ProjectRoot___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__pages_Project_ProjectRoot__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_Modals_Task_view_r__ = __webpack_require__(258);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_Modals_Task_view_r___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__components_Modals_Task_view_r__);
+
+
 
 
 
@@ -66507,14 +66513,9 @@ var routes = [{
 }, {
     path: '/project/:id',
     component: __WEBPACK_IMPORTED_MODULE_5__pages_Project_show___default.a,
-    children: [
-    // {
-    //     path: '/',
-    //     component: ModuleTasks
-    // },
-    {
-        path: 'module/:module_id',
-        component: __WEBPACK_IMPORTED_MODULE_6__pages_Module_AllTask___default.a
+    children: [{
+        path: 'task/:task_id',
+        component: __WEBPACK_IMPORTED_MODULE_9__components_Modals_Task_view_r___default.a
     }]
 }, {
     path: "*",
@@ -67610,12 +67611,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
         var vm = this;
-        mixpanel.track("project_page");
+        console.log("Show Vue");
+        //mixpanel.track("project_page");
         vm.fetchProject(this.$route.params.id);
     },
     data: function data() {
@@ -67634,8 +67638,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     watch: {
         '$route': function $route(to, from) {
-            this.fetchProject(to.params.id);
-            mixpanel.track("project_page", { "project_id": to.params.id });
+            console.log(to.params);
+            console.log(from.params);
+            $('#viewTask').modal('hide');
+
+            //TODO reduce network call
+            if (!to.params.task_id) {
+                if (!this.project.modules || this.project.id != to.params.id) {
+                    this.fetchProject(to.params.id);
+                }
+            }
         }
     },
     computed: {},
@@ -67774,7 +67786,9 @@ var render = function() {
           [_c("project-module-card", { attrs: { module: module } })],
           1
         )
-      })
+      }),
+      _vm._v(" "),
+      _c("router-view")
     ],
     2
   )
@@ -67987,8 +68001,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.showNewTaskModal = true;
         },
         showViewTaskModalf: function showViewTaskModalf(task_id) {
-            this.currentTaskId = task_id;
-            this.showViewTaskModal = true;
+            // this.currentTaskId = task_id;
+            // this.showViewTaskModal = true;
+            this.$router.push({ path: 'task/' + task_id });
         },
         getAllTasksForModule: function getAllTasksForModule(module_id) {
             var vm = this;
@@ -71990,6 +72005,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['module'],
@@ -72008,6 +72028,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         vm.eventHub.$on('searchKeyChanged', function (e) {
             vm.searchKey = e;
         });
+        vm.eventHub.$on("taskDeleted", function (e) {
+            console.log(e);
+            vm.tasks = _.reject(vm.tasks, function (o) {
+                return o.id == e.id;
+            });
+        });
     },
     data: function data() {
         return {
@@ -72018,7 +72044,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             currentTaskId: null,
             currentFilter: 'all',
             searchKey: '',
-            tasks: this.module.tasks
+            tasks: this.module.tasks ? this.module.tasks : []
         };
     },
 
@@ -72054,8 +72080,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.showNewTaskModal = true;
         },
         showViewTaskModalf: function showViewTaskModalf(task_id) {
-            this.currentTaskId = task_id;
-            this.showViewTaskModal = true;
+            // this.currentTaskId = task_id;
+            // this.showViewTaskModal = true;
+            this.$router.push({ path: '/project/' + this.module.project_id + '/task/' + task_id });
         },
         reverse: function reverse(tasks) {
             return tasks.slice().reverse();
@@ -72207,72 +72234,28 @@ var render = function() {
                         "div",
                         { staticClass: "empty_list text-center mb-5 mt-5" },
                         [
-                          _c("i", {
-                            staticClass: "fa fa-list mb-3",
-                            staticStyle: {
-                              "font-size": "100px",
-                              color: "#7c7c7d"
-                            },
-                            attrs: { "aria-hidden": "true" }
-                          }),
-                          _vm._v(" "),
                           !_vm.searchKey
-                            ? _c("h4", [_vm._v("You Don't have any Task!!")])
+                            ? _c("h4", [
+                                _vm._v("You Don't have any Task!!"),
+                                _c("br"),
+                                _c("br"),
+                                _vm._v(" "),
+                                _c("small", { staticClass: "text-muted" }, [
+                                  _vm._v("Create Quick Task")
+                                ])
+                              ])
                             : _vm._e(),
                           _vm._v(" "),
                           _vm.searchKey
                             ? _c("h4", [
-                                _vm._v("No tasks found for the search !!")
+                                _vm._v(
+                                  "\n                            No tasks found for the search !!\n                        "
+                                )
                               ])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-outline-primary mt-2",
-                              on: {
-                                click: function($event) {
-                                  _vm.showNewTaskModalf(_vm.module.id)
-                                }
-                              }
-                            },
-                            [_vm._v("Create New Task")]
-                          )
+                            : _vm._e()
                         ]
                       )
                     ])
-                  : _vm._e(),
-                _vm._v(" "),
-                !_vm.module.tasks.length
-                  ? _c(
-                      "div",
-                      { staticClass: "empty_list text-center mb-5 mt-5" },
-                      [
-                        _c("i", {
-                          staticClass: "fa fa-list mb-3",
-                          staticStyle: {
-                            "font-size": "100px",
-                            color: "#7c7c7d"
-                          },
-                          attrs: { "aria-hidden": "true" }
-                        }),
-                        _vm._v(" "),
-                        _c("h4", [_vm._v("You Dont have any Task!!")]),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-outline-primary mt-2",
-                            on: {
-                              click: function($event) {
-                                _vm.showNewTaskModalf(_vm.module.id)
-                              }
-                            }
-                          },
-                          [_vm._v("Create New Task")]
-                        )
-                      ]
-                    )
                   : _vm._e()
               ],
               2
@@ -72494,6 +72477,1272 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 252 */,
+/* 253 */,
+/* 254 */,
+/* 255 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(256)
+/* template */
+var __vue_template__ = __webpack_require__(257)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/pages/Project/ProjectRoot.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-534837d8", Component.options)
+  } else {
+    hotAPI.reload("data-v-534837d8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 256 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+/* 257 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("router-view")
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-534837d8", module.exports)
+  }
+}
+
+/***/ }),
+/* 258 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(259)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(261)
+/* template */
+var __vue_template__ = __webpack_require__(262)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-4745c27c"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Modals/Task/view-r.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4745c27c", Component.options)
+  } else {
+    hotAPI.reload("data-v-4745c27c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 259 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(260);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("5d4cc882", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4745c27c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./view-r.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4745c27c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./view-r.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 260 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.modal-lg[data-v-4745c27c] {\n    max-width: 75%;\n}\n.modal.docked .modal-header[data-v-4745c27c] {\n    padding: 8px 8px 8px 18px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 261 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__addworklog__ = __webpack_require__(216);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__addworklog___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__addworklog__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { worklogmodal: __WEBPACK_IMPORTED_MODULE_0__addworklog___default.a },
+    props: ['task_id'],
+    mounted: function mounted() {
+        console.log("View-r");
+        var vm = this;
+
+        $('#viewTask').on('hidden.bs.modal', function (e) {
+            vm.$router.push({ path: '/project/' + vm.$route.params.id });
+        });
+
+        vm.fetchTask();
+
+        axios.get("/api/users").then(function (response) {
+            vm.options = response.data;
+        });
+    },
+
+    watch: {
+        '$route': function $route(to, from) {
+            this.fetchTask();
+        }
+    },
+    data: function data() {
+        return {
+            editTask: false,
+            task: {},
+            dataLoaded: false,
+            showWorkLogModal: false,
+            options: [],
+            newWorkLog: {
+                hours: '',
+                date: ''
+            },
+            newComment: {
+                body: "",
+                type: "Task",
+                type_id: ''
+            }
+        };
+    },
+
+    methods: {
+        fetchTask: function fetchTask() {
+            var vm = this;
+            axios.get("/api/task/" + this.$route.params.task_id).then(function (response) {
+                vm.task = response.data;
+                vm.dataLoaded = true;
+                $('#viewTask').modal();
+            }, function (error) {});
+        },
+        addWorkLog: function addWorkLog() {
+            var vm = this;
+            console.log(vm.newWorkLog);
+            axios.post("/api/task/" + vm.task.id + "/work-log", vm.newWorkLog).then(function (success) {
+                vm.task.worklogs.push(success.data);
+                flash("Work Log Added");
+                $('#addWorkLog').collapse('hide');
+                vm.newWorkLog.date = "";
+                vm.newWorkLog.hours = "";
+            }).catch(function (error) {
+                flash("Error Adding Work Log", "danger");
+            });
+        },
+        addComment: function addComment() {
+            var vm = this;
+            vm.newComment.type_id = this.task.id;
+            axios.post("/api/task/" + vm.task.id + "/comment", vm.newComment).then(function (response) {
+                vm.task.comments.unshift(response.data);
+                swal({ title: "Comment Added!", icon: "success", timer: 1000 });
+                vm.newComment.body = "";
+            }, function (error) {
+                console.log(error);
+            });
+        },
+        deleteTask: function deleteTask(task) {
+            var vm = this;
+
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this task!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then(function (willDelete) {
+                if (willDelete) {
+                    axios.delete("/api/task/" + task.id).then(function (response) {
+                        vm.eventHub.$emit('taskDeleted', task);
+                        $('#viewTask').modal('hide');
+                        swal({
+                            title: "Deleted",
+                            text: "Your Task is deleted",
+                            icon: "success",
+                            timer: 1500
+                        });
+                    }, function (error) {
+                        swal({
+                            title: "Opps",
+                            text: "There was Some Error in deleting you Task!",
+                            icon: "warning",
+                            timer: 1500
+                        });
+                    });
+                }
+            });
+        }
+    },
+    computed: {
+        progressBarStyle: function progressBarStyle() {
+            if (this.task.estimated_time) {
+                var completed = this.totalHoursLogged / this.task.estimated_time * 100;
+                return 'width:' + completed + '%';
+            } else {
+                return 'width:0%';
+            }
+        },
+        totalHoursLogged: function totalHoursLogged() {
+            var hrs = 0;
+            this.task.worklogs.forEach(function (log) {
+                hrs = hrs + parseInt(log.hours);
+            });
+            return hrs;
+        }
+    }
+});
+
+/***/ }),
+/* 262 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal docked docked-right in",
+      attrs: {
+        id: "viewTask",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "exampleModalLabel",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "modal-dialog modal-lg", attrs: { role: "document" } },
+        [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header " }, [
+              _c(
+                "div",
+                {
+                  staticClass: "d-flex align-items-center",
+                  staticStyle: { width: "100%" }
+                },
+                [
+                  _c("div", { staticClass: "project-title" }, [
+                    !_vm.editTask
+                      ? _c("h4", [_vm._v(_vm._s(_vm._dis(_vm.task.name)))])
+                      : _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.task.name,
+                              expression: "task.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text" },
+                          domProps: { value: _vm.task.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.task, "name", $event.target.value)
+                            }
+                          }
+                        })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "filter-btns" }, [
+                    !_vm.editTask
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-outline-info btn-sm ml-3",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                _vm.editTask = true
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            Edit Task\n                        "
+                            )
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editTask
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-outline-success btn-sm ml-3",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                _vm.editTask = false
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            Update Task\n                        "
+                            )
+                          ]
+                        )
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(0)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-8" }, [
+                  _c("h5", [_vm._v("Description")]),
+                  _vm._v(" "),
+                  !_vm.editTask
+                    ? _c("p", [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm._dis(_vm.task.description)) +
+                            "\n                        "
+                        )
+                      ])
+                    : _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.task.description,
+                            expression: "task.description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text" },
+                        domProps: { value: _vm.task.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.task,
+                              "description",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _c("div", [
+                    _c("h5", [_vm._v("Activity")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "add-comment" }, [
+                      _c(
+                        "form",
+                        {
+                          attrs: {
+                            action: "http://mytask.test/comment",
+                            method: "post"
+                          },
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              _vm.addComment()
+                            }
+                          }
+                        },
+                        [
+                          _c("input", {
+                            attrs: {
+                              type: "hidden",
+                              name: "type",
+                              value: "Task"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: {
+                              type: "hidden",
+                              name: "type_id",
+                              value: "1"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("textarea", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.newComment.body,
+                                  expression: "newComment.body"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                name: "body",
+                                placeholder: "Write Your comment here..."
+                              },
+                              domProps: { value: _vm.newComment.body },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.newComment,
+                                    "body",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _vm._m(1)
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.dataLoaded
+                      ? _c(
+                          "div",
+                          { staticClass: "comment-list" },
+                          _vm._l(_vm.task.comments, function(comment) {
+                            return _c(
+                              "div",
+                              { staticClass: "comment-item mb-4 row" },
+                              [
+                                _c("div", { staticClass: "col-md-1" }, [
+                                  _c("div", { staticClass: "avatar" }, [
+                                    _vm._v(
+                                      "\n                                                " +
+                                        _vm._s(comment.owner.name[0]) +
+                                        "\n                                            "
+                                    )
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col-md-11" }, [
+                                  _c("div", [
+                                    _c("div", { staticClass: "comment-meta" }, [
+                                      _c(
+                                        "span",
+                                        {
+                                          staticClass:
+                                            "comment-author text-dark"
+                                        },
+                                        [
+                                          _vm._v(
+                                            _vm._s(comment.owner.display_name)
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("small", [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "comment-date text-muted"
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.formNow(comment.created_at)
+                                              ) + " "
+                                            ),
+                                            _c("em", [_vm._v("said")])
+                                          ]
+                                        )
+                                      ])
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "comment-body text-secondary"
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                                    " +
+                                            _vm._s(comment.body) +
+                                            "\n                                                "
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ]
+                            )
+                          })
+                        )
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm.dataLoaded
+                  ? _c(
+                      "div",
+                      { staticClass: "col-md-4" },
+                      [
+                        _c("h5", [_vm._v("Assigned to")]),
+                        _vm._v(" "),
+                        _vm.task.assigned
+                          ? _c("p", [
+                              _c("span", { staticClass: "avatar" }, [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(_vm.task.assigned.name[0]) +
+                                    "\n                            "
+                                )
+                              ]),
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.task.assigned.display_name) +
+                                  " (" +
+                                  _vm._s(_vm.task.assigned.email) +
+                                  ")\n                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.editTask
+                          ? _c("p", [
+                              _vm._v(
+                                "\n                            Not Assigned\n                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.editTask
+                          ? _c(
+                              "p",
+                              [
+                                _c("vselect", {
+                                  attrs: {
+                                    options: _vm.options,
+                                    label: "email"
+                                  },
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "option",
+                                      fn: function(option) {
+                                        return [
+                                          _c("div", { staticClass: "pb-2" }, [
+                                            _c(
+                                              "div",
+                                              { staticClass: "avatar" },
+                                              [
+                                                _vm._v(
+                                                  "\n                                            " +
+                                                    _vm._s(
+                                                      option.display_name[0]
+                                                    ) +
+                                                    "\n                                        "
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(
+                                              "\n                                        " +
+                                                _vm._s(option.email) +
+                                                "\n                                    "
+                                            )
+                                          ])
+                                        ]
+                                      }
+                                    }
+                                  ])
+                                })
+                              ],
+                              1
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("h5", [_vm._v("Status")]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.task.status.name) +
+                              "\n                        "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-md-6" }, [
+                            _c("h5", [_vm._v("Due Date")]),
+                            _vm._v(" "),
+                            !_vm.editTask
+                              ? _c("p", [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(_vm._dis(_vm.task.due_date)) +
+                                      "\n                        "
+                                  )
+                                ])
+                              : _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.task.due_date,
+                                      expression: "task.due_date"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: { type: "date" },
+                                  domProps: { value: _vm.task.due_date },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.task,
+                                        "due_date",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-md-6" }, [
+                            _c("h5", [_vm._v("Created Date")]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(
+                                    _vm._dis(
+                                      _vm.formatDate(_vm.task.created_at)
+                                    )
+                                  ) +
+                                  "\n                        "
+                              )
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("h5", [_vm._v("Estimated Time")]),
+                        _vm._v(" "),
+                        !_vm.editTask
+                          ? _c("p", [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm._dis(_vm.task.estimated_time)) +
+                                  "\n                        "
+                              )
+                            ])
+                          : _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.task.estimated_time,
+                                  expression: "task.estimated_time"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "number" },
+                              domProps: { value: _vm.task.estimated_time },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.task,
+                                    "estimated_time",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "progress mt-2 mb-2" }, [
+                          _c("div", {
+                            staticClass: "progress-bar progress-bar-striped",
+                            style: _vm.progressBarStyle,
+                            attrs: {
+                              role: "progressbar",
+                              "aria-valuenow":
+                                _vm.totalHoursLogged /
+                                _vm.task.estimated_time *
+                                100,
+                              "aria-valuemin": "0",
+                              "aria-valuemax": _vm.task.estimated_time
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("h5", { staticClass: "mb-3" }, [
+                          _vm._v("\n                            Work Log - "),
+                          _c("small", { staticClass: "text-muted" }, [
+                            _vm._v(_vm._s(_vm.totalHoursLogged) + " Hrs Logged")
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary btn-sm float-right",
+                              attrs: {
+                                "data-toggle": "collapse",
+                                "data-target": "#addWorkLog",
+                                "aria-expanded": "false",
+                                "aria-controls": "collapseExample"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                Log\n                            "
+                              )
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "collapse",
+                            attrs: { id: "addWorkLog" }
+                          },
+                          [
+                            _c("div", {}, [
+                              _c(
+                                "form",
+                                {
+                                  staticStyle: { padding: "10px" },
+                                  on: {
+                                    submit: function($event) {
+                                      $event.preventDefault()
+                                      _vm.addWorkLog()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("div", { staticClass: "row" }, [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "col-md-3",
+                                        staticStyle: { padding: "0px" }
+                                      },
+                                      [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.newWorkLog.hours,
+                                              expression: "newWorkLog.hours"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control form-control-sm",
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: "Hrs"
+                                          },
+                                          domProps: {
+                                            value: _vm.newWorkLog.hours
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.newWorkLog,
+                                                "hours",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "col-md-7",
+                                        staticStyle: { padding: "0px" }
+                                      },
+                                      [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.newWorkLog.date,
+                                              expression: "newWorkLog.date"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control form-control-sm",
+                                          attrs: { type: "date" },
+                                          domProps: {
+                                            value: _vm.newWorkLog.date
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.newWorkLog,
+                                                "date",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm._m(2)
+                                  ])
+                                ]
+                              )
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.task.worklogs, function(log) {
+                          return _c("div", { staticClass: "log-list mb-3" }, [
+                            _c("div", { staticClass: "avatar" }, [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(log.owner.name[0]) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("span", [
+                              _vm._v(_vm._s(log.owner.display_name) + " logged")
+                            ]),
+                            _vm._v(" "),
+                            _c("strong", { staticClass: "text-success" }, [
+                              _vm._v(_vm._s(log.hours) + " Hrs ")
+                            ]),
+                            _vm._v("\n                            on "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(_vm.formatDate(log.created_at, "D MMM"))
+                              )
+                            ])
+                          ])
+                        }),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "btn btn-outline-danger btn-block mt-2",
+                            on: {
+                              click: function($event) {
+                                _vm.deleteTask(_vm.task)
+                              }
+                            }
+                          },
+                          [_vm._v("Delete Task")]
+                        )
+                      ],
+                      2
+                    )
+                  : _vm._e()
+              ])
+            ])
+          ])
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Add Comment")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "col-md-2", staticStyle: { padding: "0px" } },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "btn-outline-success btn btn-sm",
+            attrs: { type: "submit" }
+          },
+          [
+            _vm._v(
+              "\n                                                +\n                                            "
+            )
+          ]
+        )
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4745c27c", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

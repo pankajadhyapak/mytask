@@ -43,25 +43,30 @@
 
                     <div v-if="!filteredTask.length">
                         <div class="empty_list text-center mb-5 mt-5">
-                            <i class="fa fa-list mb-3" aria-hidden="true" style="font-size:100px;color: #7c7c7d;"></i>
-                            <h4 v-if="!searchKey">You Don't have any Task!!</h4>
-                            <h4 v-if="searchKey">No tasks found for the search !!</h4>
-                            <button class="btn btn-outline-primary mt-2"
-                                    @click="showNewTaskModalf(module.id)">Create New Task</button>
+                            <!--<i class="fa fa-list mb-3" aria-hidden="true" style="font-size:100px;color: #7c7c7d;"></i>-->
+                            <h4 v-if="!searchKey">You Don't have any Task!!<br><br>
+                                <small class="text-muted">Create Quick Task</small>
+                            </h4>
+                            <h4 v-if="searchKey">
+                                No tasks found for the search !!
+                            </h4>
+                            <!--<button class="btn btn-outline-primary mt-2"-->
+                                    <!--@click="showNewTaskModalf(module.id)">Create New Task</button>-->
                         </div>
                     </div>
 
-                    <div class="empty_list text-center mb-5 mt-5" v-if="!module.tasks.length">
-                        <i class="fa fa-list mb-3" aria-hidden="true" style="font-size:100px;color: #7c7c7d;"></i>
-                        <h4>You Dont have any Task!!</h4>
-                        <button class="btn btn-outline-primary mt-2"
-                                @click="showNewTaskModalf(module.id)">Create New Task</button>
-                    </div>
+                    <!--<div class="empty_list text-center mb-5 mt-5" v-if="!module.tasks.length">-->
+                        <!--<i class="fa fa-list mb-3" aria-hidden="true" style="font-size:100px;color: #7c7c7d;"></i>-->
+                        <!--<h4>You Dont have any Task!!</h4>-->
+                        <!--<button class="btn btn-outline-primary mt-2"-->
+                                <!--@click="showNewTaskModalf(module.id)">Create New Task</button>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
         <modal-task-new v-if="showNewTaskModal" :module_id="currentModuleId"/>
         <modal-task-view v-if="showViewTaskModal" :task_id="currentTaskId" @closed="showViewTaskModal = false"/>
+
     </div>
 </template>
 
@@ -83,6 +88,10 @@
             vm.eventHub.$on('searchKeyChanged', function(e) {
                 vm.searchKey  = e;
             });
+            vm.eventHub.$on("taskDeleted", function (e) {
+                console.log(e);
+                vm.tasks = _.reject(vm.tasks, function(o) { return o.id == e.id });
+            })
         },
         data(){
           return {
@@ -93,7 +102,7 @@
               currentTaskId: null,
               currentFilter: 'all',
               searchKey:'',
-              tasks: this.module.tasks
+              tasks: this.module.tasks ? this.module.tasks : []
           }
         },
         computed:{
@@ -122,8 +131,9 @@
                 this.showNewTaskModal = true;
             },
             showViewTaskModalf(task_id) {
-                this.currentTaskId = task_id;
-                this.showViewTaskModal = true;
+                // this.currentTaskId = task_id;
+                // this.showViewTaskModal = true;
+                this.$router.push({ path: `/project/${this.module.project_id}/task/${task_id}` })
             },
             reverse(tasks) {
                 return tasks.slice().reverse();

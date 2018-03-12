@@ -99,8 +99,9 @@
                 this.showNewTaskModal = true;
             },
             showViewTaskModalf(task_id) {
-                this.currentTaskId = task_id;
-                this.showViewTaskModal = true;
+                // this.currentTaskId = task_id;
+                // this.showViewTaskModal = true;
+                this.$router.push({ path: `task/${task_id}` })
             },
             getAllTasksForModule(module_id) {
                 let vm = this;

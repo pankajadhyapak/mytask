@@ -24,6 +24,8 @@
         <div class="module-container mb-3" v-for="module in project.modules" :key="module.id">
             <project-module-card :module="module"></project-module-card>
         </div>
+
+        <router-view/>
     </div>
 </template>
 <style>
@@ -77,7 +79,8 @@
     export default {
         mounted() {
             let vm = this;
-            mixpanel.track("project_page");
+            console.log("Show Vue");
+            //mixpanel.track("project_page");
             vm.fetchProject(this.$route.params.id);
         },
         data(){
@@ -95,8 +98,16 @@
         },
         watch: {
             '$route' (to, from) {
-                this.fetchProject(to.params.id);
-                mixpanel.track("project_page", { "project_id" : to.params.id});
+                console.log(to.params);
+                console.log(from.params);
+                $('#viewTask').modal('hide');
+
+                //TODO reduce network call
+                if(!to.params.task_id){
+                    if(!this.project.modules || this.project.id != to.params.id){
+                        this.fetchProject(to.params.id);
+                    }
+                }
             }
         },
         computed: {

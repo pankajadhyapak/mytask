@@ -6,6 +6,8 @@ import SingleTeam from './pages/Team/show';
 import SingleProject from './pages/Project/show'
 import ModuleTasks from './pages/Module/AllTask'
 import Setting from './pages/Settings'
+import ProjectRoot from './pages/Project/ProjectRoot'
+import ModalSingleTask from './components/Modals/Task/view-r'
 
 let routes = [
     {
@@ -28,13 +30,9 @@ let routes = [
         path: '/project/:id',
         component: SingleProject,
         children: [
-            // {
-            //     path: '/',
-            //     component: ModuleTasks
-            // },
             {
-                path: 'module/:module_id',
-                component: ModuleTasks
+                path: 'task/:task_id',
+                component: ModalSingleTask
             }
         ]
     },
