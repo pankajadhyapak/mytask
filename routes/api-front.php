@@ -31,16 +31,13 @@ Route::post("/api/team", function(Request $request){
         'description' => $request->get('description'),
         'created_by' => auth()->id()
     ]);
-
-    $members = collect($request->get('members'))->pluck("id");
-    //$members[] = auth()->id();
-
-    $team->members()->attach(array_unique($members->toArray()));
-
+    $members[] = auth()->id();
+    $members = array_merge($members, collect($request->get('members'))->pluck("id")->toArray());
+    $team->members()->attach(array_unique($members));
     return $team->load("projects","members");
 });
 Route::get("/api/users", function(){
-    return User::all();
+    return User::where("id","!=",auth()->id())->get();
 });
 
 Route::get("api/user/search", function(){

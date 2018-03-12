@@ -30,8 +30,20 @@
 
                         <div class="form-group">
                             <label>Members</label>
-                            <user-select v-model="newTeam.members">
-                            </user-select>
+                            <vselect multiple
+                                     label="email" filterable="false"
+                                     :options="allUsers"
+                                     v-model="newTeam.members">
+
+                                <template  slot="option" slot-scope="option">
+                                    <div class="pb-2">
+                                        <div class="avatar">
+                                            {{option.display_name[0]}}
+                                        </div>
+                                        {{ option.email }}
+                                    </div>
+                                </template>
+                            </vselect>
                         </div>
                         <button type="submit" class="btn btn-primary">Create Team</button>
                     </form>
@@ -45,13 +57,13 @@
         mounted() {
             let vm = this;
             axios.get("/api/users").then(function (response) {
-                vm.options =  response.data;
+                vm.allUsers =  response.data;
             });
 
         },
         data(){
             return {
-                options: [],
+                allUsers: [],
                 closeModal: false,
                 createdTeam: null,
                 newTeam: {

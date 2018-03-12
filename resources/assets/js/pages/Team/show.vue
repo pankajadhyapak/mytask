@@ -52,7 +52,11 @@
                                         </th>
                                         <td class="text-capitalize">{{ member.display_name }}</td>
                                         <td>{{ member.email }}</td>
-                                        <td><button class="btn btn-outline-danger btn-sm">Remove</button></td>
+                                        <td>{{ formatDate(member.pivot.created_at, "MMM d Y") }}</td>
+                                        <td >
+                                            <button class="btn btn-outline-danger btn-sm" v-if="member.id != team.owner.id">Remove</button>
+                                            <span v-else>Owner</span>
+                                        </td>
                                     </tr>
 
                                     </tbody>

@@ -55,7 +55,7 @@
                     </div>
             </div>
         </aside>
-        <modal-new-team v-if="showNewTeamModal"></modal-new-team>
+        <modal-new-team v-if="showNewTeamModal" @closed="showNewTeamModal = false"/>
     </div>
 </template>
 <style scoped>
