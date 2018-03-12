@@ -19,6 +19,7 @@ class CreateTeamsTable extends Migration
             $table->text("description")->nullable();
             $table->boolean("active")->default(true);
             $table->unsignedInteger("created_by");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

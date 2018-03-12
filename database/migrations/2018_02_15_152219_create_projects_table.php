@@ -19,6 +19,7 @@ class CreateProjectsTable extends Migration
             $table->text('description')->nullable();
             $table->unsignedInteger('team_id');
             $table->unsignedInteger('created_by');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

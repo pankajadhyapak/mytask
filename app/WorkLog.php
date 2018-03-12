@@ -2,12 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 
 class WorkLog extends Model
 {
-    protected $guarded = [];
-
     protected $with = ['owner'];
 
     protected $dates = ['date'];

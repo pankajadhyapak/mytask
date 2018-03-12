@@ -20,6 +20,7 @@ class CreateStatusesTable extends Migration
             $table->boolean('default')->default(false);
             $table->boolean("defines_complete")->default(false);
             $table->nullableMorphs('statusable');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

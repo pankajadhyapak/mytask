@@ -20,6 +20,7 @@ class CreateWorkLogsTable extends Migration
             $table->text("comment")->nullable();
             $table->unsignedInteger("user_id");
             $table->nullableMorphs("loggable");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

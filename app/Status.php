@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
@@ -23,7 +22,6 @@ class Status extends Model
             "defines_complete" => true
         ],
     ];
-    protected $guarded = [];
 
     public function statusable()
     {

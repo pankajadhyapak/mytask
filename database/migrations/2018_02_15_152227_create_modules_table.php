@@ -18,6 +18,7 @@ class CreateModulesTable extends Migration
             $table->string("name")->default("Default");
             $table->unsignedInteger("project_id");
             $table->unsignedInteger("created_by");
+            $table->softDeletes();
             $table->timestamps();
         });
     }
