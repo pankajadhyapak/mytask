@@ -43,6 +43,8 @@
         position: fixed;
         right: 25px;
         bottom: 25px;
-        border-left: 10px solid;
+        border-left: 8px solid;
+        border-right: 8px solid;
+        z-index: 9999;
     }
 </style>

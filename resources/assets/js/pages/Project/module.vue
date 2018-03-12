@@ -11,9 +11,9 @@
                 </div>
 
                 <div class="filter-btns">
-                    <span v-if="module.total_estimated" class="mr-2">
+                    <span class="mr-2" v-if="moduleEstimate">
                         Total <small> - <i class="fa fa-clock-o mr-1" aria-hidden="true">
-                        </i>{{ module.total_estimated }} Hrs</small>
+                        </i>{{ moduleEstimate }} Hrs</small>
                     </span>
                     <button
                             class="btn btn-outline-primary btn-sm float-right"
@@ -89,8 +89,15 @@
                 vm.searchKey  = e;
             });
             vm.eventHub.$on("taskDeleted", function (e) {
-                console.log(e);
                 vm.tasks = _.reject(vm.tasks, function(o) { return o.id == e.id });
+            });
+            vm.eventHub.$on("taskUpdated", function (e) {
+                let task = _.find(vm.tasks, ['id', e.id]);
+                if(task){
+                    for (let attr in e) {
+                        task[attr] = e[attr];
+                    }
+                }
             })
         },
         data(){
@@ -106,6 +113,14 @@
           }
         },
         computed:{
+            moduleEstimate(){
+                return _.sumBy(this.tasks, function(o) {
+                    if(o.estimated_time){
+                        return parseInt(o.estimated_time);
+                    }
+                     return 0;
+                });
+            },
             filteredTask(){
                 let vm = this;
                 let taskLists = [];

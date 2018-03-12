@@ -110,9 +110,6 @@
                 }
             }
         },
-        computed: {
-
-        },
         methods:{
             filterBy(type){
                 this.filterType = type;

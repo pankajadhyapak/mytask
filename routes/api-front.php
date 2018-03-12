@@ -96,6 +96,12 @@ Route::get("/api/module/{module}/tasks", function (Module $module){
     return $module->load('tasks');
 });
 
+Route::put("/api/task/{task}", function (Task $task){
+    $task->fill(request()->except(['is_completed', 'assigned', 'owner','status', 'worklogs','comments']));
+    $task->update();
+    return $task;
+});
+
 Route::get("/api/task/{task}", function (Task $task){
     return $task->load('worklogs', 'comments');
 });

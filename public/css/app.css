@@ -10187,13 +10187,6 @@ body {
   border: 1px dotted #343a40;
 }
 
-.comment-item {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-}
-
 .navbar-icon {
   font-size: 18px;
   margin-top: 6px;
