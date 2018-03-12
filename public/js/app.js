@@ -67615,6 +67615,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
         var vm = this;
+        mixpanel.track("project_page");
         vm.fetchProject(this.$route.params.id);
     },
     data: function data() {
@@ -67634,6 +67635,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         '$route': function $route(to, from) {
             this.fetchProject(to.params.id);
+            mixpanel.track("project_page", { "project_id": to.params.id });
         }
     },
     computed: {},

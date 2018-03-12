@@ -77,6 +77,7 @@
     export default {
         mounted() {
             let vm = this;
+            mixpanel.track("project_page");
             vm.fetchProject(this.$route.params.id);
         },
         data(){
@@ -95,6 +96,7 @@
         watch: {
             '$route' (to, from) {
                 this.fetchProject(to.params.id);
+                mixpanel.track("project_page", { "project_id" : to.params.id});
             }
         },
         computed: {

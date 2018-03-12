@@ -60,8 +60,8 @@
                 </div>
             </div>
         </div>
-        <modal-task-new v-if="showNewTaskModal" :module_id="currentModuleId"></modal-task-new>
-        <modal-task-view v-if="showViewTaskModal" :task_id="currentTaskId" @closed="showViewTaskModal = false"></modal-task-view>
+        <modal-task-new v-if="showNewTaskModal" :module_id="currentModuleId"/>
+        <modal-task-view v-if="showViewTaskModal" :task_id="currentTaskId" @closed="showViewTaskModal = false"/>
     </div>
 </template>
 
