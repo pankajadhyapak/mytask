@@ -32,7 +32,7 @@
                                 </small>
                             </div>
                             <div class="right-box">
-                                <i @click="showNewTeamModal = true"
+                                <i @click="showProjectModal(team)"
                                    v-tooltip:bottom="'Create New Project'"
                                    class="fa fa-plus-circle"
                                    style="font-size: 14px;"
@@ -56,6 +56,11 @@
             </div>
         </aside>
         <modal-new-team v-if="showNewTeamModal" @closed="showNewTeamModal = false"/>
+
+        <modal-new-project
+                v-if="showNewProjectModal"
+                :team="currentTeam"
+                @closed="showNewProjectModal = false"/>
     </div>
 </template>
 <style scoped>
@@ -101,6 +106,8 @@
             return {
                 teams: [],
                 showNewTeamModal: false,
+                showNewProjectModal: false,
+                currentTeam: '',
                 showNewModal: false,
             }
         },
@@ -114,8 +121,23 @@
                     swal({ title :"Team Created", icon:"success" ,timer:1000});
                 }
             });
+            vm.eventHub.$on("newProjectCreated", function (data) {
+                if(data){
+                    let team = _.find(vm.teams, {'id' : data.team_id})
+                    console.log(team);
+                    if(team){
+                        team.projects.push(data);
+                        swal({ title :"Project Created", icon:"success" ,timer:1000});
+                    }
+                }
+            });
+
         },
         methods:{
+            showProjectModal(team){
+                this.currentTeam = team;
+                this.showNewProjectModal = true;
+            },
             getDashboardData(){
                 let vm = this;
                 axios.get("/api/dashboard/init").then(function (response) {

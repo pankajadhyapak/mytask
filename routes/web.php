@@ -9,12 +9,9 @@ require 'api-front.php';
 
 
 Route::get("test", function(){
-   return response()->json([
-       "success" => true,
-       "data" => [
-           "name" => "pankaj"
-       ]
-   ]);
+   $project = \App\Project::with("tasks")->first();
+
+   return $project;
 });
 Route::view('/', 'welcome')->middleware('guest');
 

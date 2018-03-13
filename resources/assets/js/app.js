@@ -30,6 +30,7 @@ Vue.component('modal-task-new', require('./components/Modals/Task/New'));
 Vue.component('modal-task-view', require('./components/Modals/Task/view'));
 Vue.component('vselect', VueSelect);
 Vue.component('modal-new-team', require('./components/Modals/Team/New'));
+Vue.component('modal-new-project', require('./components/Modals/Team/ProjectNew'));
 Vue.component('my-modal', require('./components/Modals/modal'));
 Vue.component('new-one', require('./components/Modals/Team/NewOne'));
 Vue.component('user-select', require('./components/user-select'));

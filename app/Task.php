@@ -8,7 +8,7 @@ class Task extends Model
 
     protected $with = ['assigned', 'owner', 'status'];
 
-    protected $appends = ['is_completed'];
+    protected $casts = ['is_completed' => 'bool'];
 
     public function assigned()
     {
@@ -40,18 +40,11 @@ class Task extends Model
         return $this->belongsTo(Status::class);
     }
 
-    //TODO think of better logic
-    public function getIsCompletedAttribute()
-    {
-        return $this->status
-            ->where(["id" => $this->attributes['status_id'], "defines_complete" => 1])
-            ->exists();
-    }
-
     public function markAsComplete($projectId)
     {
         $status = Status::getComplete($projectId);
         $this->status_id = $status->id;
+        $this->is_completed = true;
         $this->save();
         return $status;
     }

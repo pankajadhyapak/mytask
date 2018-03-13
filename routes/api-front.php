@@ -9,6 +9,27 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::post("/api/team/{team}/project", function(Team $team, Request $request){
+
+    $project = Project::create([
+        'name' => $request->get('name'),
+        'description' => $request->get('description'),
+        'team_id' => $team->id,
+        'created_by' => auth()->id()
+    ]);
+
+    $project->modules()->create([
+        'project_id' => $project->id,
+        'created_by' => auth()->id()
+    ]);
+
+    foreach (Status::$defaultStatus as $status) {
+        $project->statuses()->create($status);
+    }
+
+    return $project;
+});
+
 Route::patch("/api/task/{task}/complete", function (Task $task){
     return $task->markAsComplete(request('project_id'));
 });
@@ -37,6 +58,9 @@ Route::post("/api/team", function(Request $request){
     return $team->load("projects","members");
 });
 Route::get("/api/users", function(){
+    if(request()->has("me")){
+        return User::all();
+    }
     return User::where("id","!=",auth()->id())->get();
 });
 
@@ -94,13 +118,36 @@ Route::get("/api/module/{module}/tasks", function (Module $module){
 });
 
 Route::put("/api/task/{task}", function (Task $task){
-    $task->fill(request()->except(['is_completed', 'assigned', 'owner','status', 'worklogs','comments']));
+
+    $task->fill(request()->except(['statues','is_completed', 'assigned', 'owner','status', 'worklogs','comments', 'module']));
+
+    if(\request()->has("assigned")){
+        $task->assigned_to = \request()->get('assigned')['id'];
+    }
+
+    if(\request()->has("status")){
+        $t = collect(\request()->get("statues"))->where("id",\request()->get('status_id'))->first();
+
+        if($t && $t['defines_complete']){
+            $task->is_completed = true;
+        }else{
+            $task->is_completed = false;
+        }
+
+        $task->status_id = \request()->get('status_id');
+    }
+
     $task->update();
-    return $task;
+    $data['task'] = $task->fresh()->load('worklogs', 'comments');
+    $data['status'] = \request()->get("status");
+    return $data;
 });
 
 Route::get("/api/task/{task}", function (Task $task){
-    return $task->load('worklogs', 'comments');
+    $data['task'] = $task->load('worklogs', 'comments');
+    $projectId = $task->module->project_id;
+    $data['status'] = Status::where(["statusable_type" => "App\Project", "statusable_id" => $projectId])->get();
+    return $data;
 });
 
 Route::post("/api/task/{task}/comment", function(Task $task, Request $request){

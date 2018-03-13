@@ -50,32 +50,51 @@
                         <div class="col-md-4" v-if="dataLoaded">
                             <!--<div class="">Details</div>-->
                             <h5>Assigned to</h5>
-                            <p v-if="task.assigned">
+                            <p v-if="task.assigned && !editTask">
 							<span class="avatar">
 							{{ task.assigned.name[0]}}
 							</span>
                                 {{task.assigned.display_name}} ({{task.assigned.email}})
                             </p>
-                            <p v-if="!editTask">
+                            <p v-if="!editTask && !task.assigned">
                                 Not Assigned
                             </p>
                             <p v-if="editTask">
-                                <vselect :options="options" label="email">
+                                <vselect :options="options" label="email" v-model="task.assigned">
                                     <template slot="option" slot-scope="option">
                                         <div class="pb-2">
                                             <div class="avatar">
                                                 {{option.display_name[0]}}
                                             </div>
                                             {{ option.email }}
+                                            <span v-if="authUser.id == option.id">
+                                                (You)
+                                            </span>
                                         </div>
                                     </template>
                                 </vselect>
                             </p>
                             <hr>
                             <h5>Status</h5>
-                            <p>
+
+                            <p v-if="!editTask">
                                 {{task.status.name}}
                             </p>
+
+                            <select class="form-control" v-else v-model="task.status_id">
+                                <option
+                                        v-for="status in statues"
+                                        :value="status.id">
+
+                                    {{ status.name }}
+                                    <span v-if="status.default">
+                                        (Default)
+                                    </span>
+                                    <span v-if="status.defines_complete">
+                                        (completed)
+                                    </span>
+                                </option>
+                            </select>
                             <hr>
                             <div class="row">
                                 <div class="col-md-6">
@@ -151,7 +170,7 @@
 
             vm.fetchTask();
 
-            axios.get("/api/users").then(function (response) {
+            axios.get("/api/users?me=true").then(function (response) {
                 vm.options = response.data;
             });
         },
@@ -164,6 +183,7 @@
             return {
                 editTask: false,
                 task: {},
+                statues:[],
                 dataLoaded: false,
                 showWorkLogModal: false,
                 options: [],
@@ -173,7 +193,7 @@
             //TODO update only if task is changed
             updateTask() {
                 let vm = this;
-                vm.editTask = false;
+                vm.task.statues = vm.statues;
                 swal({
                     title: "Are you sure?",
                     text: "To update this task ?",
@@ -184,7 +204,9 @@
                     if (willUpdate) {
                         axios.put("/api/task/" + vm.task.id, vm.task)
                             .then(function (success) {
-                                vm.eventHub.$emit("taskUpdated", success.data);
+                                vm.eventHub.$emit("taskUpdated", success.data.task);
+                                vm.task = success.data.task;
+                                vm.editTask = false;
                                 swal({
                                     title: "Updated",
                                     text: "Your Task is updated",
@@ -206,7 +228,8 @@
             fetchTask() {
                 let vm = this;
                 axios.get("/api/task/" + this.$route.params.task_id).then(function (response) {
-                    vm.task = response.data;
+                    vm.task = response.data.task;
+                    vm.statues = response.data.status;
                     vm.dataLoaded = true;
                     $('#viewTask').modal();
                 }, function (error) {

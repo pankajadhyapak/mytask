@@ -17,7 +17,6 @@ class CreateTeamMembersTable extends Migration
             $table->increments('id');
             $table->unsignedInteger("team_id");
             $table->unsignedInteger("user_id");
-            $table->boolean("active")->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

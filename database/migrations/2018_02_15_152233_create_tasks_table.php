@@ -24,7 +24,7 @@ class CreateTasksTable extends Migration
             $table->unsignedInteger("created_by");
             $table->string("estimated_time")->nullable();
             $table->date("due_date")->nullable();
-            $table->boolean("active")->default(true);
+            $table->boolean("is_completed")->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

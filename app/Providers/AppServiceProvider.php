@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \DB::enableQueryLog();
+        \DB::listen(function ($query){
+           //info($query->sql);
+        });
     }
 
     /**

@@ -17,7 +17,6 @@ class CreateCommentsTable extends Migration
             $table->increments('id');
             $table->text("body");
             $table->unsignedInteger("user_id");
-            $table->boolean("archived")->default(false);
             $table->nullableMorphs('commentable');
             $table->softDeletes();
             $table->timestamps();

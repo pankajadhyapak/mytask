@@ -10,6 +10,11 @@ class Project extends Model
         return $this->belongsTo(Team::class);
     }
 
+    public function tasks()
+    {
+        return $this->hasManyThrough(Task::class, Module::class);
+    }
+
     public function modules()
     {
         return $this->hasMany(Module::class);

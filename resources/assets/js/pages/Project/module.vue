@@ -7,7 +7,12 @@
                  :data-target="'#module'+module.id">
 
                 <div class="project-title">
-                    {{ module.name}}&nbsp; <span class="text-muted">({{ module.tasks.length }})</span>
+                    {{ module.name}}&nbsp;
+                    <small style="margin-top:2px;">
+                        <span class="text-muted">
+                            ({{ module.tasks.length }} Tasks)
+                        </span>
+                    </small>
                 </div>
 
                 <div class="filter-btns">
@@ -15,9 +20,9 @@
                         Total <small> - <i class="fa fa-clock-o mr-1" aria-hidden="true">
                         </i>{{ moduleEstimate }} Hrs</small>
                     </span>
-                    <button
-                            class="btn btn-outline-primary btn-sm float-right"
-                            @click.stop="showNewTaskModalf(module.id)">New Task</button>
+                    <!--<button-->
+                            <!--class="btn btn-outline-primary btn-sm float-right"-->
+                            <!--@click.stop="showNewTaskModalf(module.id)">New Task</button>-->
                 </div>
             </div>
         </div>

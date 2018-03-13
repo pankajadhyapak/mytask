@@ -50277,6 +50277,7 @@ Vue.component('modal-task-new', __webpack_require__(221));
 Vue.component('modal-task-view', __webpack_require__(226));
 Vue.component('vselect', __WEBPACK_IMPORTED_MODULE_2_vue_select___default.a);
 Vue.component('modal-new-team', __webpack_require__(236));
+Vue.component('modal-new-project', __webpack_require__(269));
 Vue.component('my-modal', __webpack_require__(241));
 Vue.component('new-one', __webpack_require__(244));
 Vue.component('user-select', __webpack_require__(249));
@@ -68632,6 +68633,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -68648,7 +68668,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         vm.fetchTask();
 
-        axios.get("/api/users").then(function (response) {
+        axios.get("/api/users?me=true").then(function (response) {
             vm.options = response.data;
         });
     },
@@ -68662,6 +68682,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             editTask: false,
             task: {},
+            statues: [],
             dataLoaded: false,
             showWorkLogModal: false,
             options: []
@@ -68672,7 +68693,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         //TODO update only if task is changed
         updateTask: function updateTask() {
             var vm = this;
-            vm.editTask = false;
+            vm.task.statues = vm.statues;
             swal({
                 title: "Are you sure?",
                 text: "To update this task ?",
@@ -68682,7 +68703,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (willUpdate) {
                 if (willUpdate) {
                     axios.put("/api/task/" + vm.task.id, vm.task).then(function (success) {
-                        vm.eventHub.$emit("taskUpdated", success.data);
+                        vm.eventHub.$emit("taskUpdated", success.data.task);
+                        vm.task = success.data.task;
+                        vm.editTask = false;
                         swal({
                             title: "Updated",
                             text: "Your Task is updated",
@@ -68703,7 +68726,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         fetchTask: function fetchTask() {
             var vm = this;
             axios.get("/api/task/" + this.$route.params.task_id).then(function (response) {
-                vm.task = response.data;
+                vm.task = response.data.task;
+                vm.statues = response.data.status;
                 vm.dataLoaded = true;
                 $('#viewTask').modal();
             }, function (error) {});
@@ -69476,7 +69500,7 @@ var render = function() {
                       [
                         _c("h5", [_vm._v("Assigned to")]),
                         _vm._v(" "),
-                        _vm.task.assigned
+                        _vm.task.assigned && !_vm.editTask
                           ? _c("p", [
                               _c("span", { staticClass: "avatar" }, [
                                 _vm._v(
@@ -69495,7 +69519,7 @@ var render = function() {
                             ])
                           : _vm._e(),
                         _vm._v(" "),
-                        !_vm.editTask
+                        !_vm.editTask && !_vm.task.assigned
                           ? _c("p", [
                               _vm._v(
                                 "\n                                Not Assigned\n                            "
@@ -69534,13 +69558,27 @@ var render = function() {
                                             _vm._v(
                                               "\n                                            " +
                                                 _vm._s(option.email) +
-                                                "\n                                        "
-                                            )
+                                                "\n                                            "
+                                            ),
+                                            _vm.authUser.id == option.id
+                                              ? _c("span", [
+                                                  _vm._v(
+                                                    "\n                                                (You)\n                                            "
+                                                  )
+                                                ])
+                                              : _vm._e()
                                           ])
                                         ]
                                       }
                                     }
-                                  ])
+                                  ]),
+                                  model: {
+                                    value: _vm.task.assigned,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.task, "assigned", $$v)
+                                    },
+                                    expression: "task.assigned"
+                                  }
                                 })
                               ],
                               1
@@ -69551,13 +69589,76 @@ var render = function() {
                         _vm._v(" "),
                         _c("h5", [_vm._v("Status")]),
                         _vm._v(" "),
-                        _c("p", [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(_vm.task.status.name) +
-                              "\n                            "
-                          )
-                        ]),
+                        !_vm.editTask
+                          ? _c("p", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.task.status.name) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.task.status_id,
+                                    expression: "task.status_id"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.task,
+                                      "status_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.statues, function(status) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: status.id } },
+                                  [
+                                    _vm._v(
+                                      "\n\n                                    " +
+                                        _vm._s(status.name) +
+                                        "\n                                    "
+                                    ),
+                                    status.default
+                                      ? _c("span", [
+                                          _vm._v(
+                                            "\n                                        (Default)\n                                    "
+                                          )
+                                        ])
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    status.defines_complete
+                                      ? _c("span", [
+                                          _vm._v(
+                                            "\n                                        (completed)\n                                    "
+                                          )
+                                        ])
+                                      : _vm._e()
+                                  ]
+                                )
+                              })
+                            ),
                         _vm._v(" "),
                         _c("hr"),
                         _vm._v(" "),
@@ -70132,12 +70233,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             teams: [],
             showNewTeamModal: false,
+            showNewProjectModal: false,
+            currentTeam: '',
             showNewModal: false
         };
     },
@@ -70151,9 +70259,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 swal({ title: "Team Created", icon: "success", timer: 1000 });
             }
         });
+        vm.eventHub.$on("newProjectCreated", function (data) {
+            if (data) {
+                var team = _.find(vm.teams, { 'id': data.team_id });
+                console.log(team);
+                if (team) {
+                    team.projects.push(data);
+                    swal({ title: "Project Created", icon: "success", timer: 1000 });
+                }
+            }
+        });
     },
 
     methods: {
+        showProjectModal: function showProjectModal(team) {
+            this.currentTeam = team;
+            this.showNewProjectModal = true;
+        },
         getDashboardData: function getDashboardData() {
             var vm = this;
             axios.get("/api/dashboard/init").then(function (response) {
@@ -70261,7 +70383,7 @@ var render = function() {
                       attrs: { "aria-hidden": "true" },
                       on: {
                         click: function($event) {
-                          _vm.showNewTeamModal = true
+                          _vm.showProjectModal(team)
                         }
                       }
                     })
@@ -70313,6 +70435,17 @@ var render = function() {
             on: {
               closed: function($event) {
                 _vm.showNewTeamModal = false
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showNewProjectModal
+        ? _c("modal-new-project", {
+            attrs: { team: _vm.currentTeam },
+            on: {
+              closed: function($event) {
+                _vm.showNewProjectModal = false
               }
             }
           })
@@ -73500,6 +73633,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['module'],
@@ -73634,9 +73772,19 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "project-title" }, [
-              _vm._v("\n                " + _vm._s(_vm.module.name) + "  "),
-              _c("span", { staticClass: "text-muted" }, [
-                _vm._v("(" + _vm._s(_vm.module.tasks.length) + ")")
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.module.name) +
+                  " \n                "
+              ),
+              _c("small", { staticStyle: { "margin-top": "2px" } }, [
+                _c("span", { staticClass: "text-muted" }, [
+                  _vm._v(
+                    "\n                        (" +
+                      _vm._s(_vm.module.tasks.length) +
+                      " Tasks)\n                    "
+                  )
+                ])
               ])
             ]),
             _vm._v(" "),
@@ -73653,21 +73801,7 @@ var render = function() {
                       _vm._v(_vm._s(_vm.moduleEstimate) + " Hrs")
                     ])
                   ])
-                : _vm._e(),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-outline-primary btn-sm float-right",
-                  on: {
-                    click: function($event) {
-                      $event.stopPropagation()
-                      _vm.showNewTaskModalf(_vm.module.id)
-                    }
-                  }
-                },
-                [_vm._v("New Task")]
-              )
+                : _vm._e()
             ])
           ]
         )
@@ -73982,6 +74116,296 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(270)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(272)
+/* template */
+var __vue_template__ = __webpack_require__(273)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-b99355f2"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Modals/Team/ProjectNew.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b99355f2", Component.options)
+  } else {
+    hotAPI.reload("data-v-b99355f2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 270 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(271);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("4c2fdec6", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b99355f2\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProjectNew.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b99355f2\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProjectNew.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 271 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 272 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        var vm = this;
+        axios.get("/api/users").then(function (response) {
+            vm.allUsers = response.data;
+        });
+    },
+
+    props: ['team'],
+    data: function data() {
+        return {
+            allUsers: [],
+            closeModal: false,
+            createdProject: null,
+            newProject: {
+                name: '',
+                description: ''
+            }
+        };
+    },
+
+    methods: {
+        addNewProject: function addNewProject() {
+            var vm = this;
+            axios.post("/api/team/" + vm.team.id + "/project", vm.newProject).then(function (response) {
+                vm.createdProject = response.data;
+                vm.eventHub.$emit("newProjectCreated", response.data);
+            }, function (error) {});
+            vm.closeModal = true;
+        }
+    }
+});
+
+/***/ }),
+/* 273 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "my-modal",
+    {
+      attrs: { name: "newProject", close: _vm.closeModal },
+      on: {
+        closed: function($event) {
+          _vm.$emit("closed")
+        }
+      }
+    },
+    [
+      _c("template", { slot: "title" }, [
+        _vm._v("Create New Project in " + _vm._s(this.team.name) + " Team")
+      ]),
+      _vm._v(" "),
+      _c(
+        "form",
+        {
+          staticStyle: { padding: "10px" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              _vm.addNewProject()
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "name" } }, [_vm._v("Project Name")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.newProject.name,
+                  expression: "newProject.name"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                id: "name",
+                placeholder: "e.g. Marketing, Engineering, or Finance",
+                name: "name",
+                required: ""
+              },
+              domProps: { value: _vm.newProject.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.newProject, "name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "description" } }, [
+              _vm._v("Description")
+            ]),
+            _vm._v(" "),
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.newProject.description,
+                  expression: "newProject.description"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                id: "description",
+                name: "description",
+                placeholder: "Tell what is your team about"
+              },
+              domProps: { value: _vm.newProject.description },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.newProject, "description", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+            [_vm._v("Create Project")]
+          )
+        ]
+      )
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-b99355f2", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
