@@ -12,8 +12,11 @@
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{ url("/css/font-awesome.min.css") }}">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    @yield("extra-css")
 
     <script>
         window.app = <?php echo json_encode([

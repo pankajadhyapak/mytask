@@ -60,6 +60,16 @@ Vue.mixin({
         _dis(value, placeHolder = "-"){
             return value ? value : placeHolder;
         },
+        pathIs(url, keyword){
+            return url.includes(keyword);
+        },
+        pluck(array, key) {
+            let arr = [];
+            for(var i =0 ;i < array.length ; i++){
+                arr.push(array[i][key]);
+            }
+            return arr;
+        },
         formatDate(time, format = 'D/M/Y'){
             if(time){
                 return moment(time).format(format);

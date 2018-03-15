@@ -1,5 +1,25 @@
 @extends('layouts.app')
+@section('extra-css')
+    <style>
+        body{
+            background: linear-gradient(to top right, #69489c 10%, #69489c 65%, rgba(56, 52, 40, 0.9) 125%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .appbar{
+            background-color: transparent !important;
+        }
+        .appbar .navbar-brand {
+            color: #fff;
+        }
+        .navbar-light .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+    </style>
 
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

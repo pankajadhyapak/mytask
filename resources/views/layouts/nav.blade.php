@@ -10,17 +10,42 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav mr-auto">
-                    @auth
-                        <li>
-                            <router-link to="/dashboard" class="nav-link text-primary">Home</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/dashboard/about" class="nav-link text-primary">About</router-link>
-                        </li>
+                {{--<ul class="navbar-nav mr-auto">--}}
+                    {{--@auth--}}
+                        {{--<li>--}}
+                            {{--<router-link to="/dashboard" class="nav-link text-primary">Home</router-link>--}}
+                        {{--</li>--}}
+                        {{--<li>--}}
+                            {{--<router-link to="/dashboard/about" class="nav-link text-primary">About</router-link>--}}
+                        {{--</li>--}}
 
-                    @endauth
-                </ul>
+                    {{--@endauth--}}
+                {{--</ul>--}}
+                @auth
+                    <ul class="navbar-nav mr-auto" v-if="showProjectNav.show" style="margin-left: 138px;">
+
+                            <li>
+                                <router-link
+                                        :to="showProjectNav.currentPath+ '/tasks'"
+                                        class="nav-link text-primary">Tasks</router-link>
+                            </li>
+                            <li>
+                                <router-link
+                                        :to="showProjectNav.currentPath + '/report'"
+                                        class="nav-link text-primary">Report</router-link>
+                            </li>
+                            {{--<li>--}}
+                                {{--<router-link--}}
+                                        {{--:to="showProjectNav.currentPath + '/calendar'"--}}
+                                        {{--class="nav-link text-primary">Calendar</router-link>--}}
+                            {{--</li>--}}
+                            <li>
+                                <router-link
+                                        :to="showProjectNav.currentPath + '/files'"
+                                        class="nav-link text-primary">Files</router-link>
+                            </li>
+                    </ul>
+                @endauth
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -52,7 +77,7 @@
                                 <li class="dropdown-header">Settings</li>
                                 <li>
                                     <router-link
-                                        to="/dashboard/settings"
+                                        to="/settings"
                                         class="dropdown-item">
                                         <i class="fa fa-fw fa-btn fa-cog"></i>
                                     Settings</router-link>

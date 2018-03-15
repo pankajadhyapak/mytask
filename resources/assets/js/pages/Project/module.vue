@@ -153,7 +153,7 @@
             showViewTaskModalf(task_id) {
                 // this.currentTaskId = task_id;
                 // this.showViewTaskModal = true;
-                this.$router.push({ path: `/project/${this.module.project_id}/task/${task_id}` })
+                this.$router.push({ path: `/project/${this.module.project_id}/tasks/${task_id}` })
             },
             reverse(tasks) {
                 return tasks.slice().reverse();

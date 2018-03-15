@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="project.modules">
 
         <div class="d-flex align-items-center">
             <div class="project-title">
@@ -11,6 +11,7 @@
                       <i class="fa fa-filter mr-1" aria-hidden="true"></i>
                       {{filterType}}
                   </button>
+
                   <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <button @click="filterBy('all')" class="dropdown-item" type="button">All Tasks</button>
                     <button @click="filterBy('complete')" class="dropdown-item" type="button">Completed Tasks</button>

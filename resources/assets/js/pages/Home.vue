@@ -1,10 +1,5 @@
 <template>
     <div class="container">
-
-        <user-select v-model="selectedUsers">
-
-        </user-select>
-
         <div class="row">
             <div class="col-md-4">
                 <div class="card card-default">

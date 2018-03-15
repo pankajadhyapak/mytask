@@ -1,16 +1,22 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <img class="img notfound mt-5" :src="path" alt="Page Not Found">
-                <h3 class="mt-4 text-muted"> Hmm... Nothing Matches Your Search.</h3>
-            </div>
+        <div class="not-found">
+            <img
+                    class="img notfound mt-5 mb-5"
+                    src="/images/not_found.svg" alt="Page Not Found">
+            <h3 class="mt-lg-4 text-muted"> Hmm... Nothing Matches Your Search.</h3>
         </div>
     </div>
 </template>
 <style scoped>
-    img.notfound{
-        width: 70%;
+    .not-found{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .not-found img{
+        width: 500px;
     }
 </style>
 <script>

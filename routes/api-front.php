@@ -8,6 +8,48 @@ use App\Team;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+function rand_color() {
+    return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+}
+Route::get("/api/project/{project}/report", function (Project $project){
+    $all = $project->load('tasks');
+    $project = $project->tasks;
+    $report = [];
+    $report['total'] = count($project);
+    $status = [];
+    foreach ($project->groupBy("status.name") as $s => $t)
+    {
+        $temp = [];
+        $temp['name'] = $s;
+        $temp['count'] = $t->count();
+
+        $temp['color'] = "#36a2eb";
+        $temp['order'] = rand(2, 999);
+
+        if($t->first()->status['defines_complete']){
+            $temp['color'] = "#00bf9c";
+            $temp['order'] = 99999;
+        }
+        if($t->first()->status['default']){
+            $temp['color'] = "#ffcd56";
+            $temp['order'] = 1;
+        }
+
+        $status[] = $temp;
+    }
+    $report['status'] = collect($status)->sortBy("order")->values()->all();
+    $users = [];
+    foreach ($project->groupBy("assigned.email") as $s => $t)
+    {
+        $temp = [];
+        $temp['email'] = $s == "" ? "Un Assigned" : $s;
+        $temp['color'] = rand_color();
+        $temp['count'] = $t->count();
+        $users[] = $temp;
+    }
+    $report['users'] = $users;
+    return $report;
+});
 
 Route::post("/api/team/{team}/project", function(Team $team, Request $request){
 
@@ -96,7 +138,7 @@ Route::post("/api/task", function(Request $request){
         'status_id' => $status->id,
         'created_by' => auth()->id()
     ]);
-    return $task->load('owner');
+    return $task->load('owner','status');
 });
 
 Route::patch("/api/task/{task}", function(Task $task){

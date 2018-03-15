@@ -8,6 +8,8 @@ import ModuleTasks from './pages/Module/AllTask'
 import Setting from './pages/Settings'
 import ProjectRoot from './pages/Project/ProjectRoot'
 import ModalSingleTask from './components/Modals/Task/view-r'
+import ReportPage from './pages/report'
+import FilePage from './pages/FilePage'
 
 let routes = [
     {
@@ -28,14 +30,33 @@ let routes = [
     },
     {
         path: '/project/:id',
-        component: SingleProject,
+        component: ProjectRoot,
         children: [
             {
-                path: 'task/:task_id',
-                component: ModalSingleTask
-            }
+                path: '/',
+                redirect: 'tasks',
+            },
+            {
+                path: 'report',
+                component: ReportPage
+            },
+            {
+                path: 'files',
+                component: FilePage
+            },
+            {
+                path: 'tasks',
+                component: SingleProject,
+                children:[
+                    {
+                        path: ':task_id',
+                        component: ModalSingleTask
+                    }
+                ]
+            },
         ]
     },
+
     {
         path: "*",
         component: PageNotFound

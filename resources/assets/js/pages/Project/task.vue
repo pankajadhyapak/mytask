@@ -1,5 +1,5 @@
 <template xmlns:v-tooltip="http://www.w3.org/1999/xhtml">
-    <div class="task-item" :class="task.is_completed ? 'completed-task': ''">
+    <div class="task-item" :class="task.is_completed ? 'completed-task': ''" v-if="task">
         <div class="left-item" @click.stop="$emit('clicked')">
             <div class="task-icon">
                 <i v-if="!task.is_completed"
