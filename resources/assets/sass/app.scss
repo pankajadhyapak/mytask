@@ -162,3 +162,17 @@ body{
   flex: 1;
   justify-content: flex-end;
 }
+
+.flex-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.is-transparent{
+  background-color: transparent !important;
+  background: transparent !important;
+}
+.no-shadow{
+  box-shadow:none
+}

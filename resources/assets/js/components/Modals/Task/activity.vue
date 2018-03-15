@@ -12,6 +12,7 @@
                     <button
                             type="submit"
                             :disabled="!newComment.body"
+                            :class="{ loader : isLoading}"
                             class="btn btn-primary">Add Comment
                     </button>
                 </div>
@@ -53,6 +54,7 @@
         props:['comments', 'taskId'],
         data(){
             return {
+                isLoading: false,
                 newComment: {
                     body: "",
                     type: "Task",
@@ -63,13 +65,16 @@
         methods:{
             addComment() {
                 let vm = this;
+                vm.isLoading = true;
                 vm.newComment.type_id = this.taskId;
                 axios.post("/api/task/" + vm.taskId + "/comment", vm.newComment)
                     .then(function (response) {
+                        vm.isLoading = false;
                         vm.comments.unshift(response.data);
                         swal({title: "Comment Added!", icon: "success", timer: 1000});
                         vm.newComment.body = "";
                     }, function (error) {
+                        vm.isLoading = false;
                         console.log(error);
                     })
             },

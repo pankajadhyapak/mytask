@@ -6,6 +6,7 @@ import SingleTeam from './pages/Team/show';
 import SingleProject from './pages/Project/show'
 import ModuleTasks from './pages/Module/AllTask'
 import Setting from './pages/Settings'
+import TimeSheet from './pages/TimeSheet'
 import ProjectRoot from './pages/Project/ProjectRoot'
 import ModalSingleTask from './components/Modals/Task/view-r'
 import ReportPage from './pages/report'
@@ -19,6 +20,10 @@ let routes = [
     {
         path: '/settings',
         component: Setting
+    },
+    {
+        path: '/time-sheet',
+        component: TimeSheet
     },
     {
         path: '/about',

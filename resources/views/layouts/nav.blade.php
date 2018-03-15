@@ -82,6 +82,14 @@
                                         <i class="fa fa-fw fa-btn fa-cog"></i>
                                     Settings</router-link>
                                 </li>
+                                <li>
+                                    <router-link
+                                            to="/time-sheet"
+                                            class="dropdown-item">
+                                        <i class="fa fa-fw fa-btn fa-calendar-o"></i>
+                                        Time Sheet
+                                    </router-link>
+                                </li>
                                 {{--<li class="dropdown-divider"></li>--}}
                                 {{--<li class="dropdown-header">Support</li>--}}
                                 {{--<li>--}}

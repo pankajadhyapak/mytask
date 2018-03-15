@@ -6,11 +6,66 @@ use App\Status;
 use App\Task;
 use App\Team;
 use App\User;
+use App\WorkLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 function rand_color() {
     return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
 }
+
+Route::get("/api/time-sheet", function (Request $request){
+    $data = [];
+
+    $loggedTasks = WorkLog::with("loggable.module.project")
+       ->whereBetween('date', [$request->get("from_date"), $request->get("to_date")]);
+    if($request->has("currentUsers")){
+        $users = [];
+        foreach ($request->get('currentUsers') as $userId){
+            $users[] = (int)$userId;
+        }
+        $loggedTasks->whereIn("user_id", $users);
+    }
+    $loggedTasks = $loggedTasks->get();
+
+    foreach ($loggedTasks as $task){
+        $temp = [];
+        $temp['hours'] = $task->hours;
+        $temp['email'] = $task->owner->email;
+        $temp['date'] = Carbon::parse($task->date)->format("d-m-Y");
+        $taskt = [];
+        $taskt['name'] = $task['loggable']['name'];
+        $taskt['id'] = $task->loggable->id;
+        $temp['task'] = $taskt;
+
+        $modulet = [];
+        $modulet['name'] = $task['loggable']['module']['name'];
+        $modulet['id'] = $task['loggable']['module']['id'];
+        $temp['module'] = $modulet;
+
+        $projectt = [];
+        $projectt['name'] = $task['loggable']['module']['project']['name'];
+        $projectt['id'] = $task['loggable']['module']['project']['id'];
+        $temp['project'] = $projectt;
+
+
+        $statust = [];
+        $statust['name'] = $task['loggable']['status']['name'];
+        $statust['id'] = $task['loggable']['status']['id'];
+        $temp['status'] = $statust;
+
+        $data[] = $temp;
+    }
+    $data = collect($data);
+    $final = [];
+    foreach ($data->groupBy("email") as $email => $datat){
+        $t = [];
+        $t['email'] = $email;
+        $t['data'] = $datat;
+        $final[] = $t;
+    }
+    return $final;
+});
 Route::get("/api/project/{project}/report", function (Project $project){
     $all = $project->load('tasks');
     $project = $project->tasks;
