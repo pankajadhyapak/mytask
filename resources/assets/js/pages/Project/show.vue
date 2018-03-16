@@ -18,7 +18,25 @@
                     <button @click="filterBy('in complete')" class="dropdown-item" type="button">In Complete Tasks</button>
                   </div>
                 </div>
-                <button class="btn btn-outline-dark btn-sm float-right">New Module</button>
+                <button class="btn btn-outline-dark btn-sm float-right" data-toggle="collapse" data-target="#addModule">New Module</button>
+
+            </div>
+
+        </div>
+        <div class="collapse mt-3 mb-3" id="addModule">
+            <div class="card card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" placeholder="Module Name" class="form-control" v-model="newModule.name">
+                    </div>
+                    <div class="col-md-6">
+                        <button
+                                @click="addNewModule()"
+                                :disabled="!newModule.name"
+                                class="btn btn-outline-dark">Add Module</button>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -83,10 +101,16 @@
             console.log("Show Vue");
             //mixpanel.track("project_page");
             vm.fetchProject(this.$route.params.id);
+            vm.eventHub.$on("moduleDeleted", function (e) {
+                vm.fetchProject(vm.$route.params.id);
+            });
         },
         data(){
             return {
                 project:{},
+                newModule:{
+                    name:''
+                },
                 dataLoaded: false,
                 showNewTaskModal: false,
                 currentModuleId: null,
@@ -112,6 +136,19 @@
             }
         },
         methods:{
+            async addNewModule(){
+                try{
+                    const response = await axios.post("/api/"+this.project.id+"/module", this.newModule);
+                    console.log(response);
+                    this.project.modules.push(response.data);
+                    flash("Module Created");
+                    this.newModule.name = "";
+                    $('#addModule').collapse('hide');
+                }catch (error){
+                    flash("Unable to create Module", 'danger');
+                    console.error(error)
+                }
+            },
             filterBy(type){
                 this.filterType = type;
                 this.eventHub.$emit("filterBy", type);

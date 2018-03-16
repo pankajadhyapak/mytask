@@ -17,6 +17,21 @@ function rand_color()
     return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
 }
 
+Route::any("/api/module/{module}", function (Module $module){
+    $defm = Module::where("project_id", $module->project_id)->first();
+    $tasks = $module->tasks()->update(["module_id" => $defm->id]);
+    $module->delete();
+    return ["success" => true];
+});
+Route::post("/api/{pid}/module", function ($pid){
+    $module = Module::create([
+        "name" => request("name"),
+        "project_id" => $pid,
+        "created_by" => auth()->id()
+    ]);
+    return $module->load("tasks");
+});
+
 Route::any("/api/{team}/remove-from-team", function (Team $team){
     try{
         $userId = request('user_id');

@@ -7,7 +7,7 @@
                  :data-target="'#module'+module.id">
 
                 <div class="project-title">
-                    {{ module.name}}&nbsp;
+                    <span @click.stop="deleteModule()" class="text-danger mr-2 moduledelete">X</span>{{ module.name}}&nbsp;
                     <small style="margin-top:2px;">
                         <span class="text-muted">
                             ({{ module.tasks.length }} Tasks)
@@ -74,7 +74,14 @@
 
     </div>
 </template>
-
+<style scoped>
+    .moduledelete{
+        display: none;
+    }
+    .project-title:hover .moduledelete{
+        display: inline-block;
+    }
+</style>
 <script>
     export default {
         props:['module'],
@@ -96,6 +103,9 @@
             vm.eventHub.$on("taskDeleted", function (e) {
                 vm.tasks = _.reject(vm.tasks, function(o) { return o.id == e.id });
             });
+            vm.eventHub.$on("moduleDeleted", function (e) {
+                vm.tasks = vm.module.tasks ? vm.module.tasks : [];
+            });
             vm.eventHub.$on("taskUpdated", function (e) {
                 let task = _.find(vm.tasks, ['id', e.id]);
                 if(task){
@@ -113,11 +123,13 @@
               showViewTaskModal: false,
               currentTaskId: null,
               currentFilter: 'all',
-              searchKey:'',
-              tasks: this.module.tasks ? this.module.tasks : []
+              searchKey:''
           }
         },
         computed:{
+            tasks(){
+                return this.module.tasks;
+            },
             moduleEstimate(){
                 return _.sumBy(this.tasks, function(o) {
                     if(o.estimated_time){
@@ -146,6 +158,39 @@
             }
         },
         methods:{
+            async deleteModule() {
+                try {
+                    const willDelete = await swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, All tasks will be moved to Default module",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    });
+                    if (willDelete) {
+                        try {
+                            const response = await axios.delete("/api/module/" + this.module.id);
+                            swal({
+                                title: "Deleted",
+                                text: "Your Module is deleted",
+                                icon: "success",
+                                timer: 1500
+                            });
+                            this.eventHub.$emit('moduleDeleted', this.module.id);
+                        } catch (error) {
+                            console.error(error);
+                            swal({
+                                title: "Opps",
+                                text: "There was Some Error in deleting your Module!",
+                                icon: "warning",
+                                timer: 1500
+                            })
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            },
             showNewTaskModalf(module_id) {
                 this.currentModuleId = module_id;
                 this.showNewTaskModal = true;
