@@ -51,8 +51,8 @@
         mounted() {
             console.log('Component mounted.')
         },
-        props:['comments', 'taskId'],
-        data(){
+        props: ['comments', 'taskId'],
+        data() {
             return {
                 isLoading: false,
                 newComment: {
@@ -62,22 +62,21 @@
                 }
             }
         },
-        methods:{
-            addComment() {
-                let vm = this;
-                vm.isLoading = true;
-                vm.newComment.type_id = this.taskId;
-                axios.post("/api/task/" + vm.taskId + "/comment", vm.newComment)
-                    .then(function (response) {
-                        vm.isLoading = false;
-                        vm.comments.unshift(response.data);
-                        swal({title: "Comment Added!", icon: "success", timer: 1000});
-                        vm.newComment.body = "";
-                    }, function (error) {
-                        vm.isLoading = false;
-                        console.log(error);
-                    })
-            },
+        methods: {
+            async addComment() {
+                this.isLoading = true;
+                this.newComment.type_id = this.taskId;
+                try {
+                    const response = await axios.post("/api/task/" + this.taskId + "/comment", this.newComment);
+                    this.isLoading = false;
+                    this.comments.unshift(response.data);
+                    swal({title: "Comment Added!", icon: "success", timer: 1000});
+                    this.newComment.body = "";
+                } catch (error) {
+                    this.isLoading = false;
+                    console.log(error);
+                }
+            }
         }
     }
 </script>

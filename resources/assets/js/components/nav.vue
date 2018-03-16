@@ -1,7 +1,7 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+
         },
         data(){
             return {
@@ -14,9 +14,6 @@
                     show: this.pathIs(this.$route.fullPath, "project"),
                     currentPath: "/project/" + this.$route.params.id
                 }
-            },
-            currentProjectNav(){
-                return this.pathIs(this.$route.fullPath, "project");
             }
         },
         watch:{
@@ -24,7 +21,7 @@
                 this.eventHub.$emit("searchKeyChanged", this.searchKey);
             },
             '$route' (to, from) {
-                console.log(this.$route.fullPath);
+                // console.log(this.$route.fullPath);
             }
         }
     }

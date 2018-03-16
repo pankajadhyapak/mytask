@@ -161,18 +161,12 @@
     export default {
         components: {worklog, activity},
         mounted() {
-            console.log("View-r");
             let vm = this;
-
             $('#viewTask').on('hidden.bs.modal', function (e) {
                 vm.$router.push({path: `/project/${vm.$route.params.id}`});
             });
-
             vm.fetchTask();
-
-            axios.get("/api/users?me=true").then(function (response) {
-                vm.options = response.data;
-            });
+            vm.fetchUsers();
         },
         watch: {
             '$route'(to, from) {
@@ -183,7 +177,7 @@
             return {
                 editTask: false,
                 task: {},
-                statues:[],
+                statues: [],
                 dataLoaded: false,
                 showWorkLogModal: false,
                 options: [],
@@ -191,82 +185,93 @@
         },
         methods: {
             //TODO update only if task is changed
-            updateTask() {
-                let vm = this;
-                vm.task.statues = vm.statues;
-                swal({
-                    title: "Are you sure?",
-                    text: "To update this task ?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willUpdate) => {
+            async updateTask() {
+                try {
+                    this.task.statues = this.statues;
+                    const willUpdate = await swal({
+                        title: "Are you sure?",
+                        text: "To update this task ?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    });
                     if (willUpdate) {
-                        axios.put("/api/task/" + vm.task.id, vm.task)
-                            .then(function (success) {
-                                vm.eventHub.$emit("taskUpdated", success.data.task);
-                                vm.task = success.data.task;
-                                vm.editTask = false;
-                                swal({
-                                    title: "Updated",
-                                    text: "Your Task is updated",
-                                    icon: "success",
-                                    timer: 1200
-                                })
+                        try {
+                            const response = await axios.put("/api/task/" + this.task.id, this.task);
+                            console.log(response);
+                            this.eventHub.$emit("taskUpdated", response.data.task);
+                            this.task = response.data.task;
+                            this.editTask = false;
+                            swal({
+                                title: "Updated",
+                                text: "Your Task is updated",
+                                icon: "success",
+                                timer: 1200
                             })
-                            .catch(function (error) {
-                                swal({
-                                    title: "Oops",
-                                    text: "There was Some Error in updating you Task!",
-                                    icon: "warning",
-                                    timer: 1200
-                                })
-                            });
+                        } catch (error) {
+                            console.error(error);
+                            swal({
+                                title: "Oops",
+                                text: "There was Some Error in updating you Task!",
+                                icon: "warning",
+                                timer: 1200
+                            })
+                        }
                     }
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            async fetchTask() {
+                try {
+                    const response = await axios.get("/api/task/" + this.$route.params.task_id);
+                    this.task = response.data.task;
+                    this.statues = response.data.status;
+                    this.dataLoaded = true;
+                    $('#viewTask').modal();
+                } catch (error) {
+
+                }
+            },
+            fetchUsers() {
+                let vm = this;
+                axios.get("/api/users?me=true&team=" + vm.$route.params.id).then(function (response) {
+                    vm.options = response.data;
                 });
             },
-            fetchTask() {
-                let vm = this;
-                axios.get("/api/task/" + this.$route.params.task_id).then(function (response) {
-                    vm.task = response.data.task;
-                    vm.statues = response.data.status;
-                    vm.dataLoaded = true;
-                    $('#viewTask').modal();
-                }, function (error) {
-
-                })
-            },
-            deleteTask(task) {
-                let vm = this;
-                swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this task!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                    .then((willDelete) => {
-                        if (willDelete) {
-                            axios.delete("/api/task/" + task.id).then((response) => {
-                                vm.eventHub.$emit('taskDeleted', task);
-                                $('#viewTask').modal('hide');
-                                swal({
-                                    title: "Deleted",
-                                    text: "Your Task is deleted",
-                                    icon: "success",
-                                    timer: 1500
-                                })
-                            }, (error) => {
-                                swal({
-                                    title: "Opps",
-                                    text: "There was Some Error in deleting you Task!",
-                                    icon: "warning",
-                                    timer: 1500
-                                })
-
-                            });
-                        }
+            async deleteTask(task) {
+                try {
+                    const willDelete = await swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this task!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
                     });
+                    if (willDelete) {
+                        try {
+                            const response = await axios.delete("/api/task/" + task.id);
+                            this.eventHub.$emit('taskDeleted', task);
+                            $('#viewTask').modal('hide');
+                            swal({
+                                title: "Deleted",
+                                text: "Your Task is deleted",
+                                icon: "success",
+                                timer: 1500
+                            })
+                        } catch (error) {
+                            console.error(error);
+                            swal({
+                                title: "Opps",
+                                text: "There was Some Error in deleting you Task!",
+                                icon: "warning",
+                                timer: 1500
+                            })
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
             }
         },
         computed: {

@@ -74,16 +74,15 @@
             }
         },
         methods:{
-            addWorkLog(){
-                let vm = this;
-                axios.post("/api/team", vm.newTeam)
-                    .then((response) => {
-                        vm.createdTeam = response.data;
-                        vm.eventHub.$emit("newTeamCreated", response.data);
-                    }, (error) => {
-
-                    });
-                vm.closeModal = true;
+            async addWorkLog(){
+                try{
+                    const response = await axios.post("/api/team", this.newTeam);
+                    this.createdTeam = response.data;
+                    this.eventHub.$emit("newTeamCreated", response.data);
+                }catch (error){
+                    flash("Error Adding Work log", "danger");
+                }
+                this.closeModal = true;
             }
         }
     }

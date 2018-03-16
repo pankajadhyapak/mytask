@@ -42,4 +42,9 @@ class User extends Authenticatable
     {
         return Project::whereIn("team_id", $this->teams->pluck("id"))->get();
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, "assigned_to");
+    }
 }

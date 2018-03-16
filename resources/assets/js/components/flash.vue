@@ -1,7 +1,7 @@
 <template>
     <div :class="'alert alert-'+this.type+' alert-flash'" role="alert" v-show="show">
-        <strong v-if="type == 'success'">Success!</strong>
-        <strong v-if="type == 'danger'">Opps!</strong>
+        <strong v-if="type === 'success'">Success!</strong>
+        <strong v-if="type === 'danger'">Opps!</strong>
         {{ body }}
     </div>
 </template>

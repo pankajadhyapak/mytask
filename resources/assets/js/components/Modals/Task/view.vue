@@ -231,63 +231,56 @@
             }
         },
         methods:{
-            addWorkLog(){
-                let vm = this;
-                console.log(vm.newWorkLog);
-                axios.post("/api/task/"+this.task_id+"/work-log", vm.newWorkLog)
-                    .then(function (success) {
-                        vm.task.worklogs.push(success.data);
-                        flash("Work Log Added")
-                        $('#addWorkLog').collapse('hide')
-                        vm.newWorkLog.date = "";
-                        vm.newWorkLog.hours = "";
-                    })
-                    .catch(function (error) {
-                        flash("Error Adding Work Log", "danger")
-                    })
+            async addWorkLog(){
+                try{
+                    const response = await axios.post("/api/task/"+this.task_id+"/work-log", this.newWorkLog);
+                    this.task.worklogs.push(success.data);
+                    flash("Work Log Added")
+                    $('#addWorkLog').collapse('hide')
+                    this.newWorkLog.date = "";
+                    this.newWorkLog.hours = "";
+                }catch (error){
+                    flash("Error Adding Work Log", "danger")
+                }
             },
-            addComment(){
-                let vm = this;
-                axios.post("/api/task/"+this.task_id+"/comment", vm.newComment)
-                    .then(function (response) {
-                        vm.task.comments.unshift(response.data);
-                        swal({ title :"Comment Added!", icon:"success" ,timer:1000});
-                        vm.newComment.body = "";
-
-                    }, function (error) {
-                        console.log(error);
-                    })
+            async addComment(){
+                try{
+                    const response = await axios.post("/api/task/"+this.task_id+"/comment", this.newComment);
+                    this.task.comments.unshift(response.data);
+                    swal({ title :"Comment Added!", icon:"success" ,timer:1000});
+                    this.newComment.body = "";
+                }catch (error){
+                    flash("Error adding comment", "danger");
+                }
             },
-            deleteTask(task){
-                let vm = this;
-
-                swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this task!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                    .then((willDelete) => {
-                        if (willDelete) {
-                            axios.delete("/api/task/"+task.id).then((response)=> {
-                                swal({
-                                    title :"Deleted",
-                                    text:"Your Task is deleted",
-                                    icon:"success",
-                                    timer:1500
-                                })
-                            }, (error) =>{
-                                swal({
-                                    title :"Opps",
-                                    text:"There was Some Error in deleting you Task!",
-                                    icon:"warning",
-                                    timer:1500
-                                })
-
-                            });
-                        }
+            async deleteTask(task){
+                try{
+                    await swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this task!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
                     });
+                    try {
+                        const response = await axios.delete("/api/task/" + task.id);
+                        swal({
+                            title: "Deleted",
+                            text: "Your Task is deleted",
+                            icon: "success",
+                            timer: 1500
+                        })
+                    } catch (error) {
+                        swal({
+                            title: "Opps",
+                            text: "There was Some Error in deleting you Task!",
+                            icon: "warning",
+                            timer: 1500
+                        })
+                    }
+                }catch (error){
+
+                }
             }
         },
         computed:{

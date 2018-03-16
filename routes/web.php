@@ -1,12 +1,16 @@
 <?php
 
 
+use App\Invite;
 use App\Status;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 require 'api-front.php';
 
+Route::get("invite/{invite}/join", "InviteController@create");
+
+Route::post("invite/{invite}/join", "InviteController@store");
 
 Route::get("test", function(){
    $project = \App\Project::with("tasks")->first();
