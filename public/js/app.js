@@ -67236,6 +67236,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -67304,12 +67316,43 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("h5", { staticClass: "mt-2" }, [
-                _vm._v(_vm._s(_vm.team.members.length) + " Members")
-              ])
+              _c(
+                "div",
+                {
+                  staticStyle: {
+                    display: "flex",
+                    "align-items": "center",
+                    "justify-content": "center"
+                  }
+                },
+                [
+                  _c("h5", { staticClass: "mt-2" }, [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(_vm.team.members.length) +
+                        " Members\n                        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "ml-4 btn btn-outline-success btn-sm float-right",
+                      attrs: {
+                        "data-toggle": "collapse",
+                        "data-target": "#addNewMembers"
+                      }
+                    },
+                    [_vm._v("Add Members")]
+                  )
+                ]
+              )
             ])
           ]
         ),
+        _vm._v(" "),
+        _vm._m(0),
         _vm._v(" "),
         _c(
           "div",
@@ -67317,7 +67360,7 @@ var render = function() {
           [
             _vm.dataLoaded
               ? _c("div", { staticClass: "card-body" }, [
-                  _vm._m(0),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -67325,7 +67368,6 @@ var render = function() {
                       staticClass: "tab-content",
                       staticStyle: {
                         background: "#fff",
-                        padding: "25px 16px",
                         "box-shadow": "0 2px 3px rgba(0, 0, 0, 0.16)"
                       },
                       attrs: { id: "pills-tabContent" }
@@ -67335,6 +67377,7 @@ var render = function() {
                         "div",
                         {
                           staticClass: "tab-pane fade show active",
+                          staticStyle: { padding: "5px 16px" },
                           attrs: {
                             id: "pills-home",
                             role: "tabpanel",
@@ -67397,9 +67440,7 @@ var render = function() {
                             ]
                           ),
                           _vm._v(" "),
-                          _c("hr"),
-                          _vm._v(" "),
-                          _vm._m(1)
+                          _c("hr")
                         ]
                       ),
                       _vm._v(" "),
@@ -67407,6 +67448,7 @@ var render = function() {
                         "div",
                         {
                           staticClass: "tab-pane fade",
+                          staticStyle: { padding: "25px 16px" },
                           attrs: {
                             id: "pills-settings",
                             role: "tabpanel",
@@ -67426,6 +67468,24 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "collapse", attrs: { id: "addNewMembers" } },
+      [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _vm._v(
+              "\n                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.\n                    "
+            )
+          ])
+        ])
+      ]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -67474,25 +67534,6 @@ var staticRenderFns = [
         ])
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", placeholder: "Search Members by email" }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("button", { staticClass: "btn btn-success btn-block" }, [
-          _vm._v("Invite Members")
-        ])
-      ])
-    ])
   }
 ]
 render._withStripped = true
