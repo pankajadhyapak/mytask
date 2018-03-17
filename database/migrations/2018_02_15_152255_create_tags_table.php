@@ -17,8 +17,13 @@ class CreateTagsTable extends Migration
             $table->increments('id');
             $table->string("name");
             $table->text('description')->nullable();
-            $table->nullableMorphs('taggable');
             $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('taggables', function (Blueprint $table) {
+            $table->unsignedInteger("tag_id");
+            $table->nullableMorphs('taggable');
             $table->timestamps();
         });
     }

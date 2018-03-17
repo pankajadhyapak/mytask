@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "moment": "^2.20.1",
+        "npm": "^5.7.1",
         "sweetalert": "^2.1.0",
         "vue-flatpickr-component": "^7.0.0",
         "vue-router": "^3.0.1",

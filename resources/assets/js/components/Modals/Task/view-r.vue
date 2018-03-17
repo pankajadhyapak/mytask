@@ -36,11 +36,25 @@
                                 {{ _dis(task.description)}}
                             </p>
                             <textarea class="form-control" v-model="task.description" v-else></textarea>
-                            <!--<hr>-->
-                            <!--<h5>Tags</h5>-->
-                            <!--<p>-->
-                            <!--coming soon...-->
-                            <!--</p>-->
+                            <hr>
+                            <h5>Tags</h5>
+                            <div class="tags" v-if="!editTask">
+                                <span
+                                        v-for="tag in task.tags"
+                                        class="badge badge-info mr-2">
+                                    {{tag.name}}
+                                </span>
+                            </div>
+                            <div class="tags" v-else>
+                                <vselect
+                                        multiple
+                                        taggable
+                                        push-tags
+                                        :options="alltags"
+                                        v-model="task.tags"
+                                        label="name"
+                                />
+                            </div>
                             <hr>
                             <activity
                                     v-if="dataLoaded"
@@ -167,6 +181,9 @@
             });
             vm.fetchTask();
             vm.fetchUsers();
+            axios.get("/api/all-tags").then(function (success) {
+                vm.alltags = success.data;
+            })
         },
         watch: {
             '$route'(to, from) {
@@ -175,6 +192,7 @@
         },
         data() {
             return {
+                alltags:[],
                 editTask: false,
                 task: {},
                 statues: [],

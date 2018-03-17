@@ -4,6 +4,7 @@ use App\Invite;
 use App\Module;
 use App\Project;
 use App\Status;
+use App\Tag;
 use App\Task;
 use App\Team;
 use App\User;
@@ -17,6 +18,9 @@ function rand_color()
     return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
 }
 
+Route::get("/api/all-tags", function (){
+   return Tag::all();
+});
 Route::any("/api/module/{module}", function (Module $module){
     $defm = Module::where("project_id", $module->project_id)->first();
     $tasks = $module->tasks()->update(["module_id" => $defm->id]);
@@ -317,10 +321,42 @@ Route::get("/api/module/{module}/tasks", function (Module $module) {
 
 Route::put("/api/task/{task}", function (Task $task) {
 
-    $task->fill(request()->except(['statues', 'is_completed', 'assigned', 'owner', 'status', 'worklogs', 'comments', 'module']));
+    $task->fill(request()->except(['statues', 'is_completed', 'assigned', 'owner', 'status', 'worklogs', 'comments', 'module', 'tags']));
 
     if (\request()->has("assigned")) {
         $task->assigned_to = \request()->get('assigned')['id'];
+    }
+
+    if(\request()->has("tags")){
+        $newTags = [];
+        $allTags = \request()->get("tags");
+        foreach ($allTags as $index => $tag) {
+            if(!array_key_exists("id", $tag)){
+                $newTags[] = $tag;
+                unset($allTags[$index]);
+            }
+        }
+        $tagIds = collect($allTags)->pluck("id")->toArray();
+        $task->tags()->sync($tagIds);
+
+        foreach ($newTags as $tag){
+            $task->tags()->create($tag);
+        }
+//        dump($allTags);
+//        $newTags = [];
+//        foreach ($allTags as $index => $tag){
+//            if(is_string($tag)){
+//                $newTags[] = $tag;
+//                unset($allTags[$index]);
+//            }
+//        }
+//        $tagId = collect($allTags)->pluck("id")->toArray();
+//        dd($tagId, $newTags);
+////        $task->tags()->sync(collect($allTags)->pluck("id")->toArray());
+////
+////        foreach ($newTags as $tag){
+////            $task->tags()->create(["name" => $tag]);
+////        }
     }
 
     if (\request()->has("status")) {

@@ -37,6 +37,10 @@
         <div class="right-item">
             <!-- TODO Add popovers instead of tooltip -->
             <span class="badge mr-2" :class="task.is_completed ? 'badge-success': 'badge-dark'">{{ task.status.name}}</span>
+            <span class="badge badge-pill badge-info mr-2" v-for="tag in task.tags">
+                {{ tag.name}}
+            </span>
+
             <span class="badge badge-light mr-2" v-if="task.estimated_time">
                 <i class="fa fa-clock-o" aria-hidden="true"></i>
                 &nbsp;{{ task.estimated_time }} Hrs

@@ -6,7 +6,7 @@ namespace App;
 class Task extends Model
 {
 
-    protected $with = ['assigned', 'owner', 'status'];
+    protected $with = ['assigned', 'owner', 'status', 'tags'];
 
     protected $casts = ['is_completed' => 'bool'];
 
@@ -28,6 +28,11 @@ class Task extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable')->latest();
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable')->latest();
     }
 
     public function worklogs()
