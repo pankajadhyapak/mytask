@@ -9,14 +9,15 @@ window.Vue = require('vue');
 import VueRouter from 'vue-router';
 import router from './routes';
 import VueSelect from 'vue-select';
-
-Vue.directive('tooltip', function(el, binding){
-    $(el).tooltip({
-        title: binding.value,
-        placement: binding.arg,
-        trigger: 'hover'
-    })
-});
+import VueTippy from 'vue-tippy'
+Vue.use(VueTippy)
+// Vue.directive('tooltip', function(el, binding){
+//     $(el).tooltip({
+//         title: binding.value,
+//         placement: binding.arg,
+//         trigger: 'hover'
+//     })
+// });
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

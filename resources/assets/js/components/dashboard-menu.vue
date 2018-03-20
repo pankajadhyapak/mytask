@@ -1,4 +1,4 @@
-<template xmlns:v-tooltip="http://www.w3.org/1999/xhtml">
+<template>
     <div class="col-md-2 mainSidebar-container">
         <aside id="mainSidebar">
             <div class="d-flex align-items-center" style="padding-left: 15px;">
@@ -8,7 +8,8 @@
                 </div>
                 <div class="right-box">
                     <i @click="showNewTeamModal = true"
-                       v-tooltip:bottom="'Create New Team'"
+                        title="Create New Team"
+                        v-tippy='{ placement : "bottom" , arrow : true}'
                        class="fa fa-plus-circle"
                        style="font-size: 18px;"
                        aria-hidden="true"></i>
@@ -33,7 +34,8 @@
                             </div>
                             <div class="right-box">
                                 <i @click="showProjectModal(team)"
-                                   v-tooltip:bottom="'Create New Project'"
+                                    title="Create New Project"
+                                    v-tippy='{ placement : "bottom", arrow : true }'
                                    class="fa fa-plus-circle"
                                    style="font-size: 14px;"
                                    aria-hidden="true"></i>

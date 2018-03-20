@@ -1,11 +1,12 @@
-<template xmlns:v-tooltip="http://www.w3.org/1999/xhtml">
+<template>
     <div class="task-item" :class="task.is_completed ? 'completed-task': ''" v-if="task">
         <div class="left-item" @click.stop="$emit('clicked')">
             <div class="task-icon">
                 <i v-if="!task.is_completed"
                    @click.stop="markComplete(task)"
                    class="fa fa-check-circle-o mr-2 complete-icon float-left"
-                   v-tooltip:bottom="'Mark Complete'"
+                   title="Mark Complete"
+                   v-tippy='{ placement : "bottom", arrow : true }'
                    data-original-title="Mark Complete"
                    data-placement="bottom">
                 </i>
@@ -45,13 +46,20 @@
                 <i class="fa fa-clock-o" aria-hidden="true"></i>
                 &nbsp;{{ task.estimated_time }} Hrs
             </span>
-            <span class="badge badge-light mr-2" v-tooltip:bottom="task.due_date" v-if="task.due_date" >
+            <span class="badge badge-light mr-2"
+                    :title="task.due_date" v-tippy='{ placement : "bottom", arrow : true }'
+                    v-if="task.due_date" >
                 {{ formatDate(task.due_date, "MMM DD") }}
             </span>
-            <div v-tooltip:bottom="task.assigned.email" class="avatar" v-if="task.assigned">
+            <div
+                :title="task.assigned.email"
+                v-tippy='{ placement : "bottom", arrow : true }'
+                class="avatar" v-if="task.assigned">
                 {{ task.assigned.name[0]}}
             </div>
-            <div v-tooltip:bottom="'Assign Task'" class="avatar not-assigned" v-else>
+            <div
+            title="Assign Task" v-tippy='{ placement : "bottom", arrow : true }'
+            class="avatar not-assigned" v-else>
                 UA
             </div>
         </div>
