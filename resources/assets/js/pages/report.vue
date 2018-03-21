@@ -79,7 +79,7 @@
     }
     .no-report .fa{
         font-size: 120px;
-        color: #796ef0;
+        color: #5868e2;
         margin-bottom: 40px;
     }
 </style>

@@ -31,4 +31,8 @@
     a.nav-link.router-link-exact-active {
         border-bottom: 2px solid;
     }
+    .bgsame {
+        background: #e7ebf2 !important;
+        background-color: #e7ebf2 !important;
+    }
 </style>

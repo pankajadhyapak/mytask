@@ -67,7 +67,10 @@
     .module-heading{
         box-shadow: none;
         border-radius: 0;
-        background: #dcdcdc;
+        box-shadow: inset 0 -1px #e6ebf1;
+        border-top: 2px solid #3e396b;
+        border-radius: 0;
+        margin-top:12px;
     }
 
     .avatar.float-right {

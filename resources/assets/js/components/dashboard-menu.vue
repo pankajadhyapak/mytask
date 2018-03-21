@@ -37,7 +37,7 @@
                                     title="Create New Project"
                                     v-tippy='{ placement : "bottom", arrow : true }'
                                    class="fa fa-plus-circle"
-                                   style="font-size: 14px;"
+                                   style="font-size: 16px;line-height: 20px;font-weight: 400;color: #32325d;"
                                    aria-hidden="true"></i>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                                     :to="{path: '/project/' + project.id}"
                                     active-class="active-p"
                                     class="text-capitalize"
-                                    style="display:block;font-size: 12px;margin-left: 10px;">
+                                    style="display:block;font-size: 14px;margin-left: 5px;line-height: 20px;font-weight: 400;color: #32325d;">
                                 {{project.name}}
                             </router-link>
 
@@ -70,8 +70,7 @@
         padding: 1px;
     }
     .mainSidebar-container{
-        box-shadow: 2px 0 5px #c1c1c1;
-        padding-top: 20px;
+        padding-top: 5px;
         padding-bottom: 20px;
     }
     #mainSidebar a {
@@ -88,7 +87,7 @@
         padding:8px
     }
     .sidebar-menu-item a.active {
-        color: #7746ec !important;
+        color: #5969e2 !important;
     }
     .sidebar-menu-item {
         padding: 10px 0px;
@@ -97,9 +96,14 @@
         padding: 10px;
     }
     .active-p{
-        background: #7746ec !important;
-        color: #fff !important;
-        padding: 6px;
+        font-weight: 600 !important;
+        color: #5868e2 !important;
+    }
+    .active-p::before{
+        content: '*';
+        /*font-family: FontAwesome;
+        content: "\f111";
+        font-size: 12px;*/
     }
 </style>
 <script>

@@ -68875,7 +68875,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.complete-icon{\n    color:#333;\n    font-size: 18px;\n}\n.complete-icon:hover{\n    color: #28a745;\n}\n.completed-task .complete-icon{\n    color: #28a745;\n}\n.task {\n    padding: 10px;\n    border: 1px dashed #b1afaf;\n    cursor: pointer;\n}\n.module-heading{\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border-radius: 0;\n    background: #dcdcdc;\n}\n.avatar.float-right {\n    position: relative;\n    right: 0;\n    top: -4px;\n}\n.completed-task {\n    color: #28a745 !important;\n    opacity: .6;\n}\n.project-title{\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: left;\n        -ms-flex-align: left;\n            align-items: left;\n    -webkit-box-pack: start;\n        -ms-flex-pack: start;\n            justify-content: flex-start;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n}\n.filter-btns{\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n}\n", ""]);
+exports.push([module.i, "\n.complete-icon{\n    color:#333;\n    font-size: 18px;\n}\n.complete-icon:hover{\n    color: #28a745;\n}\n.completed-task .complete-icon{\n    color: #28a745;\n}\n.task {\n    padding: 10px;\n    border: 1px dashed #b1afaf;\n    cursor: pointer;\n}\n.module-heading{\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border-radius: 0;\n    -webkit-box-shadow: inset 0 -1px #e6ebf1;\n            box-shadow: inset 0 -1px #e6ebf1;\n    border-top: 2px solid #3e396b;\n    border-radius: 0;\n    margin-top:12px;\n}\n.avatar.float-right {\n    position: relative;\n    right: 0;\n    top: -4px;\n}\n.completed-task {\n    color: #28a745 !important;\n    opacity: .6;\n}\n.project-title{\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: left;\n        -ms-flex-align: left;\n            align-items: left;\n    -webkit-box-pack: start;\n        -ms-flex-pack: start;\n            justify-content: flex-start;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n}\n.filter-btns{\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n}\n", ""]);
 
 // exports
 
@@ -68892,6 +68892,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+//
+//
+//
 //
 //
 //
@@ -75127,7 +75130,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\nh6.report-item strong[data-v-7e5a1b91]{\n    float: right;\n}\n.no-report[data-v-7e5a1b91]{\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    margin-top:100px;\n}\n.no-report .fa[data-v-7e5a1b91]{\n    font-size: 120px;\n    color: #796ef0;\n    margin-bottom: 40px;\n}\n", ""]);
+exports.push([module.i, "\nh6.report-item strong[data-v-7e5a1b91]{\n    float: right;\n}\n.no-report[data-v-7e5a1b91]{\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    margin-top:100px;\n}\n.no-report .fa[data-v-7e5a1b91]{\n    font-size: 120px;\n    color: #5868e2;\n    margin-bottom: 40px;\n}\n", ""]);
 
 // exports
 
@@ -80820,7 +80823,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\na.nav-link.router-link-exact-active[data-v-1ada6748] {\n    border-bottom: 2px solid;\n}\n", ""]);
+exports.push([module.i, "\na.nav-link.router-link-exact-active[data-v-1ada6748] {\n    border-bottom: 2px solid;\n}\n.bgsame[data-v-1ada6748] {\n    background: #e7ebf2 !important;\n    background-color: #e7ebf2 !important;\n}\n", ""]);
 
 // exports
 
@@ -80944,7 +80947,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\nhr[data-v-7320d262]{\n    padding: 1px;\n}\n.mainSidebar-container[data-v-7320d262]{\n    -webkit-box-shadow: 2px 0 5px #c1c1c1;\n            box-shadow: 2px 0 5px #c1c1c1;\n    padding-top: 20px;\n    padding-bottom: 20px;\n}\n#mainSidebar a[data-v-7320d262] {\n    color: #495057;\n}\n.dashboard-menu[data-v-7320d262]{\n    background: #222b37;\n    color:#fff;\n}\n.dashboard-menu a[data-v-7320d262]{\n    color:#fff\n}\n.dashboard-menu li[data-v-7320d262]{\n    padding:8px\n}\n.sidebar-menu-item a.active[data-v-7320d262] {\n    color: #7746ec !important;\n}\n.sidebar-menu-item[data-v-7320d262] {\n    padding: 10px 0px;\n}\n.sidebar-menu[data-v-7320d262] {\n    padding: 10px;\n}\n.active-p[data-v-7320d262]{\n    background: #7746ec !important;\n    color: #fff !important;\n    padding: 6px;\n}\n", ""]);
+exports.push([module.i, "\nhr[data-v-7320d262]{\n    padding: 1px;\n}\n.mainSidebar-container[data-v-7320d262]{\n    padding-top: 5px;\n    padding-bottom: 20px;\n}\n#mainSidebar a[data-v-7320d262] {\n    color: #495057;\n}\n.dashboard-menu[data-v-7320d262]{\n    background: #222b37;\n    color:#fff;\n}\n.dashboard-menu a[data-v-7320d262]{\n    color:#fff\n}\n.dashboard-menu li[data-v-7320d262]{\n    padding:8px\n}\n.sidebar-menu-item a.active[data-v-7320d262] {\n    color: #5969e2 !important;\n}\n.sidebar-menu-item[data-v-7320d262] {\n    padding: 10px 0px;\n}\n.sidebar-menu[data-v-7320d262] {\n    padding: 10px;\n}\n.active-p[data-v-7320d262]{\n    font-weight: 600 !important;\n    color: #5868e2 !important;\n}\n.active-p[data-v-7320d262]::before{\n    content: '*';\n    /*font-family: FontAwesome;\n    content: \"\\f111\";\n    font-size: 12px;*/\n}\n", ""]);
 
 // exports
 
@@ -80955,6 +80958,10 @@ exports.push([module.i, "\nhr[data-v-7320d262]{\n    padding: 1px;\n}\n.mainSide
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
 //
 //
 //
@@ -81198,7 +81205,12 @@ var render = function() {
                         }
                       ],
                       staticClass: "fa fa-plus-circle",
-                      staticStyle: { "font-size": "14px" },
+                      staticStyle: {
+                        "font-size": "16px",
+                        "line-height": "20px",
+                        "font-weight": "400",
+                        color: "#32325d"
+                      },
                       attrs: {
                         title: "Create New Project",
                         "aria-hidden": "true"
@@ -81223,8 +81235,11 @@ var render = function() {
                           staticClass: "text-capitalize",
                           staticStyle: {
                             display: "block",
-                            "font-size": "12px",
-                            "margin-left": "10px"
+                            "font-size": "14px",
+                            "margin-left": "5px",
+                            "line-height": "20px",
+                            "font-weight": "400",
+                            color: "#32325d"
                           },
                           attrs: {
                             to: { path: "/project/" + project.id },

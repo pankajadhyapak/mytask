@@ -2,8 +2,7 @@
 @section('extra-css')
     <style>
         body{
-            background: linear-gradient(to top right, #69489c 10%, #69489c 65%, rgba(56, 52, 40, 0.9) 125%);
-            display: flex;
+background: #3b3c74;            display: flex;
             flex-direction: column;
             justify-content: center;
             min-height: 100vh;
@@ -23,7 +22,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-4">
             <div class="card card-default">
                 <div class="card-header">Reset Password</div>
 

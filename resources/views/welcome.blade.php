@@ -2,7 +2,7 @@
 @section('extra-css')
     <style>
         body{
-            background: linear-gradient(to top right, #69489c 10%, #69489c 65%, rgba(56, 52, 40, 0.9) 125%);
+            background: #3b3c74;
             display: flex;
             flex-direction: column;
             justify-content: center;

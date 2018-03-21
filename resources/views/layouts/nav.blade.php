@@ -1,9 +1,22 @@
+<div v-cloak>
+
 <nav-component inline-template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light appbar fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light appbar fixed-top" :class="{ 'bgsame': authUser}">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
+
+            @auth
+                <router-link
+                    to="/"
+                    class="navbar-brand">
+                    {{ config('app.name', 'Laravel') }}
+                </router-link>
+            @endauth
+            @guest
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    {{ config('app.name', 'Laravel') }}
+                </a>
+            @endguest
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -57,8 +70,10 @@
                         <li class="nav-item">
                             <input
                                     v-model="searchKey"
-                                    style="background: #f8f9fa;"
-                                    class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                                    class="form-control mr-sm-2 nav-search"
+                                    type="text"
+                                    placeholder="Search your tasks..."
+                                    aria-label="Search">
                         </li>
                         <li class="nav-item">
                             <a class="nav-link has-activity-indicator">
@@ -118,3 +133,4 @@
         </div>
     </nav>
 </nav-component>
+</div>
