@@ -35,7 +35,7 @@
                     {{--@endauth--}}
                 {{--</ul>--}}
                 @auth
-                    <ul class="navbar-nav mr-auto" v-if="showProjectNav.show" style="margin-left: 138px;">
+                    <ul class="navbar-nav mr-auto" v-if="showProjectNav.show" style="margin-left: 148px;">
 
                             <li>
                                 <router-link
@@ -67,7 +67,7 @@
                         <li class="nav-item"><a class="nav-link text-primary" href="{{ route('login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-link text-primary" href="{{ route('register') }}">Register</a></li>
                     @else
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="showProjectNav.show">
                             <input
                                     v-model="searchKey"
                                     class="form-control mr-sm-2 nav-search"
