@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ url("/css/font-awesome.min.css") }}">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <!-- Styles -->
-    <style type="text/css">
+    <!-- <style type="text/css">
     /* Camphor */
     @font-face {
       font-family: 'Camphor';
@@ -26,7 +26,7 @@
       font-weight: 400;
       src: src: url('{{ url("/fonts/camphor400.woff2") }}') format('woff2');
     }
-    </style>
+    </style> -->
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 

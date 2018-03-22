@@ -4,9 +4,16 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import "horizon";
+
+@import "camphor";
+
 body{
-  font-family: 'Camphor', sans-serif;
+  font-family: Camphor, Open Sans, Segoe UI, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
 [v-cloak] { display:none; }
 .appbar{
   margin-bottom: 25px;
@@ -197,4 +204,8 @@ body{
 }
 .modal .modal-content {
     background: #f6f9fc;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
 }
